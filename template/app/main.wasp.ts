@@ -4,6 +4,7 @@ import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
 import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
 import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
+import { AgentDetailPage } from "./src/landing-page/AgentDetailPage" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
 import { adminSpec } from "./src/admin/admin.wasp";
@@ -40,6 +41,8 @@ export default app({
     // Prerendering routes with static content creates HTML files at build time that are served immediately,
     // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
     route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
+    route("AgentDetailRoute", "/agents/:slug", page(AgentDetailPage)),
+    route("AgentsRoute", "/agents", page(LandingPage)),
     route("NotFoundRoute", "*", page(NotFoundPage)),
     authSpec,
     userSpec,

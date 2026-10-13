@@ -194,7 +194,7 @@ function NavBarMobileMenu({
                 {isUserLoading ? null : !user ? (
                   <WaspRouterLink to={routes.LoginRoute.to}>
                     <div className="text-foreground hover:text-primary flex items-center justify-end transition-colors duration-300 ease-in-out">
-                      Log in <LogIn size="1.1rem" className="ml-1" />
+                      Sign in <LogIn size="1.1rem" className="ml-1" />
                     </div>
                   </WaspRouterLink>
                 ) : (

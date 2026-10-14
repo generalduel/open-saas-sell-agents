@@ -26,6 +26,11 @@ model User {
   contactFormMessages       ContactFormMessage[]
   tasks                     Task[]
   files                     File[]
+  agentConfigs              PortalAgentConfig[]
+  portalCredentials         PortalCredential[]
+  portalReviews             PortalReview[]
+  googleConnections         PortalGoogleConnection[]
+  googleOAuthStates         PortalGoogleOAuthState[]
 }
 
 model GptResponse {
@@ -108,4 +113,74 @@ model ContactFormMessage {
   content                   String
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?
+}
+
+model PortalAgentConfig {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug String
+  active Boolean @default(false)
+  parameters Json @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, slug])
+  @@index([userId, active])
+}
+model PortalCredential {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider String
+  ciphertext String @db.Text
+  iv String
+  tag String
+  keyVersion Int @default(1)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  @@unique([userId, provider])
+}
+model PortalGoogleConnection {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  googleSubject String?
+  scopes String[]
+  encryptedRefreshToken String? @db.Text
+  tokenIv String?
+  tokenTag String?
+  keyVersion Int @default(1)
+  connectedAt DateTime?
+  updatedAt DateTime @updatedAt
+  @@unique([userId])
+}
+model PortalReview {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowId String
+  executionId String
+  title String
+  summary String @db.Text
+  proposedAction Json
+  status String @default("pending")
+  decisionId String? @unique
+  reviewedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, status])
+  @@unique([userId, executionId])
+}
+
+model PortalGoogleOAuthState {
+ id String @id @default(uuid())
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ verifierCiphertext String @db.Text
+ verifierIv String
+ verifierTag String
+ expiresAt DateTime
+ consumedAt DateTime?
+ createdAt DateTime @default(now())
+ @@index([userId,expiresAt])
 }

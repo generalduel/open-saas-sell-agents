@@ -87,7 +87,7 @@ export function NavBar({
                     },
                   )}
                 >
-                  Your SaaS
+                  AI Workforce
                 </span>
               </WaspRouterLink>
 
@@ -180,7 +180,7 @@ function NavBarMobileMenu({
           <SheetHeader>
             <SheetTitle className="flex items-center">
               <WaspRouterLink to={routes.LandingPageRoute.to}>
-                <span className="sr-only">Your SaaS</span>
+                <span className="sr-only">AI Workforce</span>
                 <NavLogo isScrolled={false} />
               </WaspRouterLink>
             </SheetTitle>
@@ -194,7 +194,7 @@ function NavBarMobileMenu({
                 {isUserLoading ? null : !user ? (
                   <WaspRouterLink to={routes.LoginRoute.to}>
                     <div className="text-foreground hover:text-primary flex items-center justify-end transition-colors duration-300 ease-in-out">
-                      Log in <LogIn size="1.1rem" className="ml-1" />
+                      Sign in <LogIn size="1.1rem" className="ml-1" />
                     </div>
                   </WaspRouterLink>
                 ) : (
@@ -252,7 +252,7 @@ function NavLogo({ isScrolled }: { isScrolled: boolean }) {
         "size-7": isScrolled,
       })}
       src={logo}
-      alt="Your SaaS App"
+      alt="AI Workforce"
     />
   );
 }

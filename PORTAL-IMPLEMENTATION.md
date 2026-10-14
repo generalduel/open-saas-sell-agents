@@ -25,7 +25,7 @@ Existing Wasp email/Google account sign-in and existing payments are reused. Thi
 - [ ] Suggested minimum scopes: `https://www.googleapis.com/auth/drive.file` for files created/opened with the app; `https://www.googleapis.com/auth/gmail.send` for sending. Reading arbitrary mailbox messages requires broader scopes (for example `gmail.readonly`); request only necessary scopes after separate feature consent.
 - [ ] Obtain Google verification for sensitive/restricted scopes as necessary. Restricted Gmail data stored/transmitted on servers may require independent security assessment.
 - [ ] In callback exchange code on server, encrypt refresh token, store subject and scopes, never return Google tokens to browser.
-- [ ] Implement refresh/revoke/disconnect logic and error recovery before enabling Sync button. **The current Sync Google Account button is deliberately disabled** until this code and credentials exist.
+- [ ] The Sync button now starts a server-side OAuth authorization-code + PKCE flow, and its callback validates the ID token and encrypts the refresh token. Configure the Google client credentials and redirect URI; implement refresh/revoke/disconnect and cross-service credential delivery before production activation.
 - [ ] Do not confuse Wasp Google **sign-in** with Google Drive/Gmail **authorization**; these are distinct OAuth grants and scopes.
 Google references: https://developers.google.com/identity/protocols/oauth2/web-server ; https://developers.google.com/workspace/gmail/api/auth/scopes ; https://developers.google.com/workspace/drive/api/guides/api-specific-auth
 ## 4. n8n integration
@@ -42,7 +42,7 @@ Portal browser → authenticated Wasp actions → n8n signed webhook. Wasp sends
 PORTAL_ENCRYPTION_KEY=<32 random bytes base64; KMS-managed in production>
 N8N_WEBHOOK_SHARED_SECRET=<32+ random bytes; separate from encryption key>
 N8N_AGENT_WEBHOOK_URL=https://YOUR_N8N_HOST/webhook/agent-launch
-N8N_DECISION_WEBHOOK_URL=https://YOUR_N8N_HOST/webhook/review-decision
+N8N_DECISION_WEBHOOK_URL=https://YOUR_N8N_HOST/webhook/review-decision\nGOOGLE_CLIENT_ID=<server-side OAuth client ID>\nGOOGLE_CLIENT_SECRET=<server-side OAuth client secret>\nGOOGLE_SYNC_REDIRECT_URI=https://YOUR_API_HOST/portal/google/callback\nPORTAL_WEB_URL=https://YOUR_FRONTEND_HOST
 ```
 Never commit secrets. Configure them through the actual hosting provider's secret manager.
 ## 6. Security and release gates

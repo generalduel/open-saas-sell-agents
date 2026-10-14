@@ -19,6 +19,7 @@ import { userSpec } from "./src/user/user.wasp";
 import { PortalPage } from "./src/portal/PortalPage" with { type: "ref" };
 import { getPortalState,saveAgentConfig,saveCredential,decideReview,launchAgent } from "./src/portal/operations" with { type: "ref" };
 import { portalReviewWebhook } from "./src/portal/webhook" with { type: "ref" };
+import { beginGoogleSync,googleSyncCallback } from "./src/portal/googleOAuth" with { type: "ref" };
 
 export default app({
   name: "OpenSaaS",
@@ -56,6 +57,8 @@ export default app({
     action(decideReview,{entities:["PortalReview"]}),
     action(launchAgent,{entities:["PortalAgentConfig"]}),
     api("POST","/portal/review-events",portalReviewWebhook,{entities:["PortalReview","PortalAgentConfig"]}),
+    action(beginGoogleSync,{entities:["PortalGoogleOAuthState"]}),
+    api("GET","/portal/google/callback",googleSyncCallback,{entities:["PortalGoogleOAuthState","PortalGoogleConnection"]}),
     demoAiAppSpec,
     paymentSpec,
     fileUploadSpec,

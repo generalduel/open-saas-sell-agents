@@ -30,6 +30,7 @@ model User {
   portalCredentials         PortalCredential[]
   portalReviews             PortalReview[]
   googleConnections         PortalGoogleConnection[]
+  googleOAuthStates         PortalGoogleOAuthState[]
 }
 
 model GptResponse {
@@ -169,4 +170,17 @@ model PortalReview {
   updatedAt DateTime @updatedAt
   @@index([userId, status])
   @@unique([userId, executionId])
+}
+
+model PortalGoogleOAuthState {
+ id String @id @default(uuid())
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ verifierCiphertext String @db.Text
+ verifierIv String
+ verifierTag String
+ expiresAt DateTime
+ consumedAt DateTime?
+ createdAt DateTime @default(now())
+ @@index([userId,expiresAt])
 }

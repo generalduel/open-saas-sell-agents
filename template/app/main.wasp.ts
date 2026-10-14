@@ -1,4 +1,4 @@
-import { app, page, route } from "@wasp.sh/spec";
+import { app, page, route, action, query, api } from "@wasp.sh/spec";
 
 import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
@@ -16,6 +16,9 @@ import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
 import { paymentSpec } from "./src/payment/payment.wasp";
 import { emailSender } from "./src/server/emailSender.wasp";
 import { userSpec } from "./src/user/user.wasp";
+import { PortalPage } from "./src/portal/PortalPage" with { type: "ref" };
+import { getPortalState,saveAgentConfig,saveCredential,decideReview,launchAgent } from "./src/portal/operations" with { type: "ref" };
+import { portalReviewWebhook } from "./src/portal/webhook" with { type: "ref" };
 
 export default app({
   name: "OpenSaaS",
@@ -46,6 +49,13 @@ export default app({
     route("NotFoundRoute", "*", page(NotFoundPage)),
     authSpec,
     userSpec,
+    route("PortalRoute", "/portal", page(PortalPage, { authRequired: true })),
+    query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview"]}),
+    action(saveAgentConfig,{entities:["PortalAgentConfig"]}),
+    action(saveCredential,{entities:["PortalCredential"]}),
+    action(decideReview,{entities:["PortalReview"]}),
+    action(launchAgent,{entities:["PortalAgentConfig"]}),
+    api("POST","/portal/review-events",portalReviewWebhook,{entities:["PortalReview","PortalAgentConfig"]}),
     demoAiAppSpec,
     paymentSpec,
     fileUploadSpec,

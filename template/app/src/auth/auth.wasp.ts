@@ -75,7 +75,7 @@ export const authConfig: Auth = {
     //       (RequestPasswordResetRoute, PasswordResetRoute, EmailVerificationRoute)
     email: emailAuthMethod,
     // usernameAndPassword: usernameAndPasswordAuthMethod,
-    // google: googleAuthMethod,
+    google: googleAuthMethod,
     // gitHub: gitGubAuthMethod,
     // discord: discordAuthMethod,
   },

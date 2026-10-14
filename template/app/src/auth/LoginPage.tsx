@@ -1,4 +1,4 @@
-import { LoginForm } from "wasp/client/auth";
+import { LoginForm, googleSignInUrl } from "wasp/client/auth";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import { ArrowLeft, ArrowRight, Database, ShieldCheck, Workflow } from "lucide-react";
 import { useRedirectIfLoggedIn } from "./hooks/useRedirectIfLoggedIn";
@@ -31,6 +31,16 @@ export function LoginPage() {
             <p className="mt-3 text-slate-300">Enter your account credentials to continue.</p>
             <div className="mt-9 rounded-2xl bg-white p-7 text-gray-900 shadow-2xl shadow-black/20 sm:p-9">
               <LoginForm />
+            </div>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center gap-4 text-xs text-slate-400"><span className="h-px flex-1 bg-white/20"/><span>OR CONTINUE WITH</span><span className="h-px flex-1 bg-white/20"/></div>
+              <a href={googleSignInUrl} className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/30 bg-white px-5 py-3 font-semibold text-[#102630] hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300">
+                <span className="font-bold text-[#4285F4]" aria-hidden="true">G</span> Continue with Google
+              </a>
+              <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-4">
+                <span className="font-semibold text-slate-200">Continue with Amazon</span>
+                <p className="mt-1 text-xs text-slate-400">Coming soon — requires a separately configured Login with Amazon identity provider.</p>
+              </div>
             </div>
             <div className="mt-7 space-y-4 text-sm">
               <p className="text-slate-300">New to AI Workforce?{" "}

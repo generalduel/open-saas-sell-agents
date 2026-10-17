@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { useQuery,getAgentCredentialWorkspace,provisionAgentCredential } from "wasp/client/operations";
-import { ArrowLeft,ArrowRight,ShieldCheck,CheckCircle2,PlugZap,Eye,EyeOff,LockKeyhole,Search } from "lucide-react";
+import { ArrowLeft,ArrowRight,ShieldCheck,CheckCircle2,PlugZap,Eye,EyeOff,LockKeyhole } from "lucide-react";
 
 const serviceDescriptions:Record<string,string>={
  openai:"Power your worker with OpenAI models.",
@@ -15,7 +15,6 @@ export function AgentCredentialsPage(){
  const {data,refetch,isLoading,error}=useQuery(getAgentCredentialWorkspace);
  const [entitlement,setEntitlement]=useState("");
  const [service,setService]=useState("");
- const [search,setSearch]=useState("");
  const [values,setValues]=useState<Record<string,string>>({});
  const [visible,setVisible]=useState(false);
  const [busy,setBusy]=useState(false);
@@ -23,7 +22,6 @@ export function AgentCredentialsPage(){
  const selectedEntitlement=entitlement||data?.entitlements?.[0]?.id||"";
  const chosen=data?.services.find((s:any)=>s.id===service);
  const linked=data?.links.filter((x:any)=>x.entitlementId===selectedEntitlement)??[];
- const choices=data?.services.filter((s:any)=>s.label.toLowerCase().includes(search.toLowerCase()))??[];
  const selectService=(id:string)=>{setService(id);setValues({});setVisible(false);setNotice("");};
  async function save(){if(!chosen||!selectedEntitlement)return;setBusy(true);setNotice("");try{await provisionAgentCredential({entitlementId:selectedEntitlement,service,data:values});setValues({});setNotice("Your connection has been saved to your agent workspace.");await refetch();}catch{setNotice("Connection could not be saved. Please check the details or contact support.");}finally{setBusy(false);}}
  return <main className="min-h-screen bg-[#08131d] px-5 py-12 text-slate-50">
@@ -37,9 +35,17 @@ export function AgentCredentialsPage(){
  <section className="mt-14 border-t border-white/20 pt-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-medium text-cyan-300">01 / YOUR WORKER</p><h2 className="mt-3 text-3xl font-semibold">Which worker are we connecting?</h2></div><span className="text-sm text-slate-400">{data.entitlements.length} assigned worker{data.entitlements.length===1?"":"s"}</span></div>
  <div className="mt-7 grid gap-3 md:grid-cols-3">{data.entitlements.map((a:any)=><button key={a.id} type="button" aria-pressed={selectedEntitlement===a.id} onClick={()=>{setEntitlement(a.id);selectService("");}} className={`min-h-32 rounded-xl border p-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-cyan-300 ${selectedEntitlement===a.id?"border-cyan-300 bg-[#164350]":"border-white/15 bg-[#102630] hover:border-white/50"}`}><div className="flex items-center justify-between"><PlugZap className="text-cyan-300" size={24}/>{selectedEntitlement===a.id&&<CheckCircle2 size={20} className="text-cyan-300"/>}</div><p className="mt-5 text-lg font-semibold">{readable(a.agentSlug)}</p><p className="mt-1 text-sm text-slate-400">Assigned to your account</p></button>)}</div></section>
  <section className="mt-16 border-t border-white/20 pt-8"><p className="text-sm font-medium text-cyan-300">02 / CONNECT A SERVICE</p><h2 className="mt-3 text-3xl font-semibold">What should your worker connect to?</h2><p className="mt-3 text-slate-300">Choose a service below. You'll only need to enter the details required for that connection.</p>
- <div className="relative mt-8 max-w-lg"><Search className="pointer-events-none absolute left-4 top-3.5 text-slate-400" size={20}/><input aria-label="Search services" className="w-full rounded-xl border border-white/25 bg-[#102630] py-3 pl-12 pr-4 text-white outline-none focus:border-cyan-300" placeholder="Find a service…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
- <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{choices.map((s:any)=>{const connected=linked.some((x:any)=>x.service===s.id&&x.status==="provisioned");return <button type="button" key={s.id} onClick={()=>selectService(s.id)} aria-pressed={service===s.id} className={`group rounded-2xl border p-6 text-left transition-all focus-visible:outline-2 focus-visible:outline-cyan-300 ${service===s.id?"border-cyan-300 bg-[#164350]":"border-white/15 bg-[#102630] hover:border-cyan-300/60"}`}><div className="flex items-center justify-between gap-2"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-300/10 text-lg font-semibold text-cyan-300">{s.label.slice(0,1)}</span>{connected?<span className="inline-flex items-center gap-1 text-xs text-cyan-300"><CheckCircle2 size={14}/> Connected</span>:<ArrowRight size={19} className="text-slate-400 group-hover:text-cyan-300"/>}</div><h3 className="mt-5 text-xl font-semibold">{s.label}</h3><p className="mt-2 text-sm leading-relaxed text-slate-300">{serviceDescriptions[s.id]??"Extend your worker with this service."}</p></button>})}</div>
- {choices.length===0&&<p className="mt-6 text-slate-400">No services match this search.</p>}</section>
+ <div className="mt-8 max-w-2xl rounded-2xl border border-white/20 bg-[#102630] p-6">
+ <label htmlFor="service-select" className="mb-3 block text-sm font-semibold text-slate-200">Service or application</label>
+ <select id="service-select" value={service} onChange={e=>selectService(e.target.value)} className="w-full rounded-xl border border-cyan-300/40 bg-[#081b26] px-4 py-4 text-white outline-none focus:border-cyan-300 focus-visible:ring-2 focus-visible:ring-cyan-300">
+ <option value="">Choose a service to connect…</option>
+ {data.services.map((s:any)=><option key={s.id} value={s.id}>{s.label}{linked.some((x:any)=>x.service===s.id&&x.status==="provisioned")?" (Connected)":""}</option>)}
+ </select>
+ {chosen&&<div className="mt-5 flex items-start gap-3 rounded-xl border border-white/10 bg-[#081b26] p-4">
+ <PlugZap size={21} className="mt-0.5 shrink-0 text-cyan-300"/><div><p className="font-semibold">{chosen.label}</p><p className="mt-1 text-sm text-slate-300">{serviceDescriptions[chosen.id]??"Extend your worker with this service."}</p></div>
+ </div>}
+ <p className="mt-4 text-xs text-slate-400">Choose a provider to see the required connection details below.</p>
+ </div></section>
  {chosen&&<section className="mt-14 rounded-[1.75rem] border border-cyan-300/30 bg-[#102b38] p-6 sm:p-10"><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm font-semibold text-cyan-300">03 / SECURE CONNECTION</p><h2 className="mt-3 text-3xl font-semibold">Connect {chosen.label}</h2><p className="mt-3 max-w-xl text-slate-300">Enter the details for your account. Your saved secret values won't be shown again.</p></div><LockKeyhole size={32} className="text-cyan-300"/></div>
  <div className="mt-9 grid gap-6 md:grid-cols-2">{chosen.fields.map((f:any)=><label key={f.key} className="block"><span className="mb-2 block text-sm font-medium text-white">{f.label}</span><span className="flex items-center gap-2"><input autoComplete="off" spellCheck={false} type={f.secret&&!visible?"password":"text"} value={values[f.key]??""} onChange={e=>setValues(v=>({...v,[f.key]:e.target.value}))} className="min-w-0 w-full rounded-xl border border-white/25 bg-[#071b26] p-3.5 text-white outline-none focus:border-cyan-300" placeholder={f.secret?"Enter securely":f.label}/>{f.secret&&<button type="button" aria-label={visible?"Hide key":"Show key"} onClick={()=>setVisible(v=>!v)} className="rounded-xl border border-white/20 p-3.5 hover:bg-white/10">{visible?<EyeOff size={18}/>:<Eye size={18}/>}</button>}</span></label>)}</div>
  <div className="mt-9 flex flex-wrap items-center gap-5 border-t border-white/15 pt-7"><button type="button" onClick={save} disabled={busy||chosen.fields.some((f:any)=>!values[f.key]?.trim())} className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-7 py-3.5 font-semibold text-[#061b25] hover:bg-white disabled:cursor-not-allowed disabled:opacity-40">{busy?"Connecting…":"Save connection"} <ArrowRight size={17}/></button><p className="max-w-md text-xs leading-relaxed text-slate-400">The connection is configured through our secure server. Your account never receives backend administrator credentials.</p></div></section>}

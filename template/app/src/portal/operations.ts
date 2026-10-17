@@ -1,7 +1,7 @@
 import { HttpError } from "wasp/server";
 import { randomUUID, createHmac } from "node:crypto";
 import { seal } from "./crypto";
-const allowed=["ai-lead-generation","full-sales-teams","reputation-management-threat-intelligence","hr-services","ai-recruitment-ecosystem","ai-resume-screening","custom-ai-agents","crm-sales-automation","ai-workshops","autonomous-sales-sdr","document-processor","fraud-investigator"];
+const allowed=["ai-lead-generation","full-sales-teams","reputation-management-threat-intelligence","hr-services","ai-recruitment-ecosystem","ai-resume-screening","custom-ai-agents","crm-sales-automation","ai-workshops","autonomous-sales-sdr","document-processor","fraud-investigator","inbox-manager","calendar-manager"];
 const providers=["openai","claude","omni"];
 function userId(ctx:any):string{if(!ctx.user)throw new HttpError(401);return ctx.user.id;}
 export async function getPortalState(_args:unknown,ctx:any){const id=userId(ctx);const [user,agents,creds,google,reviews]=await Promise.all([

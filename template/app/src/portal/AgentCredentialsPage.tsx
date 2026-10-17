@@ -1,3 +1,4 @@
+import { n8nCredentialTypes, friendlyCredentialName } from "./n8nCredentialCatalog";
 import { useState } from "react";
 import { Link } from "react-router";
 import { useQuery,getAgentCredentialWorkspace,provisionAgentCredential } from "wasp/client/operations";
@@ -15,6 +16,8 @@ export function AgentCredentialsPage(){
  const {data,refetch,isLoading,error}=useQuery(getAgentCredentialWorkspace);
  const [entitlement,setEntitlement]=useState("");
  const [service,setService]=useState("");
+ const [serviceSearch,setServiceSearch]=useState("");
+ const [requestedType,setRequestedType]=useState("");
  const [values,setValues]=useState<Record<string,string>>({});
  const [visible,setVisible]=useState(false);
  const [busy,setBusy]=useState(false);
@@ -22,7 +25,7 @@ export function AgentCredentialsPage(){
  const selectedEntitlement=entitlement||data?.entitlements?.[0]?.id||"";
  const chosen=data?.services.find((s:any)=>s.id===service);
  const linked=data?.links.filter((x:any)=>x.entitlementId===selectedEntitlement)??[];
- const selectService=(id:string)=>{setService(id);setValues({});setVisible(false);setNotice("");};
+ const selectService=(id:string)=>{setService(id);setRequestedType("");setValues({});setVisible(false);setNotice("");};
  async function save(){if(!chosen||!selectedEntitlement)return;setBusy(true);setNotice("");try{await provisionAgentCredential({entitlementId:selectedEntitlement,service,data:values});setValues({});setNotice("Your connection has been saved to your agent workspace.");await refetch();}catch{setNotice("Connection could not be saved. Please check the details or contact support.");}finally{setBusy(false);}}
  return <main className="min-h-screen bg-[#08131d] px-5 py-12 text-slate-50">
  <div className="mx-auto max-w-6xl">
@@ -36,15 +39,17 @@ export function AgentCredentialsPage(){
  <div className="mt-7 grid gap-3 md:grid-cols-3">{data.entitlements.map((a:any)=><button key={a.id} type="button" aria-pressed={selectedEntitlement===a.id} onClick={()=>{setEntitlement(a.id);selectService("");}} className={`min-h-32 rounded-xl border p-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-cyan-300 ${selectedEntitlement===a.id?"border-cyan-300 bg-[#164350]":"border-white/15 bg-[#102630] hover:border-white/50"}`}><div className="flex items-center justify-between"><PlugZap className="text-cyan-300" size={24}/>{selectedEntitlement===a.id&&<CheckCircle2 size={20} className="text-cyan-300"/>}</div><p className="mt-5 text-lg font-semibold">{readable(a.agentSlug)}</p><p className="mt-1 text-sm text-slate-400">Assigned to your account</p></button>)}</div></section>
  <section className="mt-16 border-t border-white/20 pt-8"><p className="text-sm font-medium text-cyan-300">02 / CONNECT A SERVICE</p><h2 className="mt-3 text-3xl font-semibold">What should your worker connect to?</h2><p className="mt-3 text-slate-300">Choose a service below. You'll only need to enter the details required for that connection.</p>
  <div className="mt-8 max-w-2xl rounded-2xl border border-white/20 bg-[#102630] p-6">
- <label htmlFor="service-select" className="mb-3 block text-sm font-semibold text-slate-200">Service or application</label>
- <select id="service-select" value={service} onChange={e=>selectService(e.target.value)} className="w-full rounded-xl border border-cyan-300/40 bg-[#081b26] px-4 py-4 text-white outline-none focus:border-cyan-300 focus-visible:ring-2 focus-visible:ring-cyan-300">
- <option value="">Choose a service to connect…</option>
- {data.services.map((s:any)=><option key={s.id} value={s.id}>{s.label}{linked.some((x:any)=>x.service===s.id&&x.status==="provisioned")?" (Connected)":""}</option>)}
+ <label htmlFor="service-search" className="mb-3 block text-sm font-semibold text-slate-200">Search integrations</label>
+ <input id="service-search" type="search" placeholder="Search all n8n-supported connection types…" className="mb-4 w-full rounded-xl border border-white/20 bg-[#081b26] px-4 py-3 text-white outline-none focus:border-cyan-300" value={serviceSearch} onChange={e=>setServiceSearch(e.target.value)}/>
+ <label htmlFor="service-select" className="mb-3 block text-sm font-semibold text-slate-200">Choose a service</label>
+ <select id="service-select" value={requestedType||service} onChange={e=>{const id=e.target.value;if(data.services.some((s:any)=>s.id===id)){selectService(id);}else{setRequestedType(id);setService("");setValues({});}}} className="w-full rounded-xl border border-cyan-300/40 bg-[#081b26] px-4 py-4 text-white outline-none focus:border-cyan-300 focus-visible:ring-2 focus-visible:ring-cyan-300">
+ <option value="">Choose a service…</option>
+ <optgroup label="Ready to configure">{data.services.filter((s:any)=>s.label.toLowerCase().includes(serviceSearch.toLowerCase())).map((s:any)=><option key={s.id} value={s.id}>{s.label}{linked.some((x:any)=>x.service===s.id&&x.status==="provisioned")?" (Connected)":""}</option>)}</optgroup>
+ <optgroup label="From n8n catalog — setup required">{n8nCredentialTypes.filter(type=>!data.services.some((s:any)=>s.label.toLowerCase()===friendlyCredentialName(type).toLowerCase())&&friendlyCredentialName(type).toLowerCase().includes(serviceSearch.toLowerCase())).map(type=><option key={type} value={type}>{friendlyCredentialName(type)}</option>)}</optgroup>
  </select>
- {chosen&&<div className="mt-5 flex items-start gap-3 rounded-xl border border-white/10 bg-[#081b26] p-4">
- <PlugZap size={21} className="mt-0.5 shrink-0 text-cyan-300"/><div><p className="font-semibold">{chosen.label}</p><p className="mt-1 text-sm text-slate-300">{serviceDescriptions[chosen.id]??"Extend your worker with this service."}</p></div>
- </div>}
- <p className="mt-4 text-xs text-slate-400">Choose a provider to see the required connection details below.</p>
+ {chosen&&<div className="mt-5 flex items-start gap-3 rounded-xl border border-white/10 bg-[#081b26] p-4"><PlugZap size={21} className="mt-0.5 shrink-0 text-cyan-300"/><div><p className="font-semibold">{chosen.label}</p><p className="mt-1 text-sm text-slate-300">{serviceDescriptions[chosen.id]??"Extend your worker with this service."}</p></div></div>}
+ {requestedType&&<div role="status" className="mt-5 rounded-xl border border-amber-300/30 bg-amber-300/10 p-4"><p className="font-semibold text-amber-200">{friendlyCredentialName(requestedType)} needs setup</p><p className="mt-2 text-sm text-slate-300">n8n includes a credential definition for this service, but this portal has not implemented and validated its connection fields or secure provisioning. Please contact support to enable it for your agent.</p></div>}
+ <p className="mt-4 text-xs text-slate-400">Only services listed under Ready to configure can currently be provisioned. Other choices are discoverable but not connected.</p>
  </div></section>
  {chosen&&<section className="mt-14 rounded-[1.75rem] border border-cyan-300/30 bg-[#102b38] p-6 sm:p-10"><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm font-semibold text-cyan-300">03 / SECURE CONNECTION</p><h2 className="mt-3 text-3xl font-semibold">Connect {chosen.label}</h2><p className="mt-3 max-w-xl text-slate-300">Enter the details for your account. Your saved secret values won't be shown again.</p></div><LockKeyhole size={32} className="text-cyan-300"/></div>
  <div className="mt-9 grid gap-6 md:grid-cols-2">{chosen.fields.map((f:any)=><label key={f.key} className="block"><span className="mb-2 block text-sm font-medium text-white">{f.label}</span><span className="flex items-center gap-2"><input autoComplete="off" spellCheck={false} type={f.secret&&!visible?"password":"text"} value={values[f.key]??""} onChange={e=>setValues(v=>({...v,[f.key]:e.target.value}))} className="min-w-0 w-full rounded-xl border border-white/25 bg-[#071b26] p-3.5 text-white outline-none focus:border-cyan-300" placeholder={f.secret?"Enter securely":f.label}/>{f.secret&&<button type="button" aria-label={visible?"Hide key":"Show key"} onClick={()=>setVisible(v=>!v)} className="rounded-xl border border-white/20 p-3.5 hover:bg-white/10">{visible?<EyeOff size={18}/>:<Eye size={18}/>}</button>}</span></label>)}</div>

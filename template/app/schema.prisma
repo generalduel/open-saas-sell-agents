@@ -31,6 +31,8 @@ model User {
   portalReviews             PortalReview[]
   googleConnections         PortalGoogleConnection[]
   googleOAuthStates         PortalGoogleOAuthState[]
+  agentEntitlements         CustomerAgentEntitlement[]
+  agentCredentialLinks      CustomerAgentCredential[]
 }
 
 model GptResponse {
@@ -183,4 +185,36 @@ model PortalGoogleOAuthState {
  consumedAt DateTime?
  createdAt DateTime @default(now())
  @@index([userId,expiresAt])
+}
+
+model CustomerAgentEntitlement {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  agentSlug String
+  n8nProjectId String
+  workflowId String?
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  @@unique([userId,agentSlug])
+  @@index([n8nProjectId])
+}
+model CustomerAgentCredential {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  entitlementId String
+  service String
+  n8nCredentialId String?
+  n8nCredentialType String
+  encryptedData String @db.Text
+  iv String
+  tag String
+  keyVersion Int @default(1)
+  status String @default("pending")
+  lastError String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  @@unique([entitlementId,service])
+  @@index([userId])
 }

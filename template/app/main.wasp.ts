@@ -17,6 +17,8 @@ import { paymentSpec } from "./src/payment/payment.wasp";
 import { emailSender } from "./src/server/emailSender.wasp";
 import { userSpec } from "./src/user/user.wasp";
 import { PortalPage } from "./src/portal/PortalPage" with { type: "ref" };
+import { AgentCredentialsPage } from "./src/portal/AgentCredentialsPage" with { type: "ref" };
+import { getAgentCredentialWorkspace,provisionAgentCredential } from "./src/portal/agentCredentials" with { type: "ref" };
 import { getPortalState,saveAgentConfig,saveCredential,decideReview,launchAgent } from "./src/portal/operations" with { type: "ref" };
 import { portalReviewWebhook } from "./src/portal/webhook" with { type: "ref" };
 import { beginGoogleSync,googleSyncCallback } from "./src/portal/googleOAuth" with { type: "ref" };
@@ -51,6 +53,9 @@ export default app({
     authSpec,
     userSpec,
     route("PortalRoute", "/portal", page(PortalPage, { authRequired: true })),
+    route("AgentCredentialsRoute", "/portal/credentials", page(AgentCredentialsPage, { authRequired: true })),
+    query(getAgentCredentialWorkspace,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
+    action(provisionAgentCredential,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
     query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview"]}),
     action(saveAgentConfig,{entities:["PortalAgentConfig"]}),
     action(saveCredential,{entities:["PortalCredential"]}),

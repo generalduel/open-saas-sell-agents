@@ -6,7 +6,7 @@ const label="text-sm font-semibold text-cyan-300";
 export function AgentDetailPage(){
  const {slug}=useParams();const agent=agents.find(a=>a.slug===slug);
  if(!agent)return <main className="mx-auto max-w-5xl px-6 py-24"><h1 className="text-4xl font-semibold">Agent not found</h1><Link to="/agents" className="mt-6 inline-block underline">Explore all agents</Link></main>;
- if(slug==="inbox-manager"||slug==="calendar-manager"||slug==="crm-sales-automation") return <AgentSalesPage slug={slug}/>;
+ if(slug==="inbox-manager"||slug==="calendar-manager"||slug==="crm-manager"||slug==="sales-automation") return <AgentSalesPage slug={slug}/>;
  const related=agents.filter(a=>a.slug!==agent.slug && a.category===agent.category).slice(0,2);
  return <div className="bg-[#08131d] text-slate-50">
  <main>

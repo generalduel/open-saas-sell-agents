@@ -118,21 +118,14 @@ export function PricingPage() {
   };
 
   return (
-    <div className="py-10 lg:mt-10">
+    <div className="min-h-screen bg-[#08131d] py-16 text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div id="pricing" className="mx-auto max-w-4xl text-center">
           <h2 className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
             Pick your <span className="text-primary">pricing</span>
           </h2>
         </div>
-        <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-center text-lg leading-8">
-          Choose between Stripe, LemonSqueezy or Polar as your payment provider.
-          Just add your Product IDs! Try it out below with test credit card
-          number <br />
-          <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 font-mono text-sm">
-            4242 4242 4242 4242 4242
-          </span>
-        </p>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-slate-300">Start with a clear workflow, connect approved tools and stay in control. Plan features below reflect the currently configured billing products, not a guarantee that any specific agent is included.</p>
         {errorMessage && (
           <Alert variant="destructive" className="mt-8">
             <AlertDescription>{errorMessage}</AlertDescription>
@@ -145,9 +138,9 @@ export function PricingPage() {
               className={cn(
                 "relative flex grow flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-lg",
                 {
-                  "ring-primary bg-transparent! ring-2":
+                  "ring-cyan-300 ring-2":
                     planId === bestDealPaymentPlanId,
-                  "ring-border ring-1 lg:my-8":
+                  "ring-white/20 ring-1 lg:my-8":
                     planId !== bestDealPaymentPlanId,
                 },
               )}
@@ -169,26 +162,26 @@ export function PricingPage() {
                 <div className="flex items-center justify-between gap-x-4">
                   <CardTitle
                     id={planId}
-                    className="text-foreground text-lg font-semibold leading-8"
+                    className="text-white text-lg font-semibold leading-8"
                   >
                     {paymentPlanCards[planId].name}
                   </CardTitle>
                 </div>
-                <p className="text-muted-foreground mt-4 text-sm leading-6">
+                <p className="text-slate-300 mt-4 text-sm leading-6">
                   {paymentPlanCards[planId].description}
                 </p>
                 <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className="text-foreground text-4xl font-bold tracking-tight">
+                  <span className="text-white text-4xl font-bold tracking-tight">
                     {paymentPlanCards[planId].price}
                   </span>
-                  <span className="text-muted-foreground text-sm font-semibold leading-6">
+                  <span className="text-slate-300 text-sm font-semibold leading-6">
                     {paymentPlans[planId].effect.kind === "subscription" &&
                       "/month"}
                   </span>
                 </p>
                 <ul
                   role="list"
-                  className="text-muted-foreground mt-8 space-y-3 text-sm leading-6"
+                  className="text-slate-300 mt-8 space-y-3 text-sm leading-6"
                 >
                   {paymentPlanCards[planId].features.map((feature) => (
                     <li key={feature} className="flex gap-x-3">

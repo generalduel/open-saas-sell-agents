@@ -18,8 +18,8 @@ import {
 
 export function AccountPage({ user }: { user: User }) {
   return (
-    <div className="mt-10 px-6">
-      <Card className="mb-4 lg:m-8">
+    <div className="min-h-screen bg-[#08131d] px-6 py-12 text-white">
+      <div className="mx-auto max-w-5xl"><p className="text-sm font-semibold tracking-widest text-cyan-300">AI WORKFORCE · YOUR ACCOUNT</p><h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">Your digital workforce starts with a secure account.</h1><p className="mb-10 mt-5 max-w-2xl text-slate-300">Review your subscription, credits and account details. Manage your agent workspace and connect approved services under your login.</p><div className="mb-6 flex flex-wrap gap-3"><WaspRouterLink to="/portal" className="rounded-full bg-cyan-300 px-6 py-3 font-semibold text-[#08131d]">Open my workspace</WaspRouterLink><WaspRouterLink to="/portal/credentials" className="rounded-full border border-white/30 px-6 py-3 font-semibold text-white">Connect my tools</WaspRouterLink></div><Card className="mb-4 border-white/15 bg-[#102630] text-white lg:mx-0">
         <CardHeader>
           <CardTitle className="text-foreground text-base font-semibold leading-6">
             Account Information
@@ -88,13 +88,13 @@ export function AccountPage({ user }: { user: User }) {
                   About
                 </div>
                 <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
-                  I'm a cool customer.
+                  Manage your subscription and agent access from your private workspace.
                 </div>
               </div>
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card></div>
     </div>
   );
 }

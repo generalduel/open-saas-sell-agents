@@ -32,6 +32,8 @@ jobs:
         run: npm install --global @wasp.sh/wasp-cli@0.26.0
       - name: Validate Wasp CLI
         run: wasp version
+      - name: Install application dependencies
+        run: wasp install
       - name: Generate production build
         run: wasp build
       - name: Validate Prisma schema

@@ -1,0 +1,40 @@
+name: AI Workforce Wasp Build
+
+on:
+  pull_request:
+    paths:
+      - 'template/app/**'
+      - '.github/workflows/ai-workforce-wasp-build.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'template/app/**'
+      - '.github/workflows/ai-workforce-wasp-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wasp-build:
+    name: Generate and build Wasp application
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: template/app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Wasp CLI for project version
+        run: npm install --global @wasp.sh/wasp-cli@0.26.0
+      - name: Validate Wasp CLI
+        run: wasp version
+      - name: Install application dependencies
+        run: wasp install
+      - name: Generate production build
+        run: wasp build
+      - name: Validate Prisma schema
+        run: npx prisma validate --schema schema.prisma

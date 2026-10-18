@@ -29,7 +29,7 @@ import {
 
 const emailAuthMethod: EmailAuthConfig = {
   fromField: {
-    name: "Open SaaS App",
+    name: "AI Workforce",
     email: "me@example.com",
   },
   emailVerification: {
@@ -80,7 +80,7 @@ export const authConfig: Auth = {
     // discord: discordAuthMethod,
   },
   onAuthFailedRedirectTo: "/login",
-  onAuthSucceededRedirectTo: "/demo-app",
+  onAuthSucceededRedirectTo: "/portal",
 };
 
 export const authSpec: Spec = [

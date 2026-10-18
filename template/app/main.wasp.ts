@@ -5,6 +5,7 @@ import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type:
 import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
 import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
 import { AgentDetailPage } from "./src/landing-page/AgentDetailPage" with { type: "ref" };
+import { SupportPage, PrivacyPage, TermsPage } from "./src/landing-page/LaunchInfoPages" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
 import { adminSpec } from "./src/admin/admin.wasp";
@@ -26,7 +27,7 @@ import { beginGoogleSync,googleSyncCallback } from "./src/portal/googleOAuth" wi
 export default app({
   name: "OpenSaaS",
   wasp: { version: "^0.26.0" },
-  title: "My Open SaaS App",
+  title: "AI Workforce | Managed AI Agents",
   head,
   auth: authConfig,
   db: {
@@ -48,6 +49,9 @@ export default app({
     // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
     route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
     route("AgentDetailRoute", "/agents/:slug", page(AgentDetailPage)),
+    route("SupportRoute", "/support", page(SupportPage)),
+    route("PrivacyRoute", "/privacy", page(PrivacyPage)),
+    route("TermsRoute", "/terms", page(TermsPage)),
     route("AgentsRoute", "/agents", page(LandingPage)),
     route("NotFoundRoute", "*", page(NotFoundPage)),
     authSpec,
@@ -56,11 +60,11 @@ export default app({
     route("AgentCredentialsRoute", "/portal/credentials", page(AgentCredentialsPage, { authRequired: true })),
     query(getAgentCredentialWorkspace,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
     action(provisionAgentCredential,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
-    query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview"]}),
-    action(saveAgentConfig,{entities:["PortalAgentConfig"]}),
+    query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview","CustomerAgentEntitlement","CustomerAgentCredential"]}),
+    action(saveAgentConfig,{entities:["PortalAgentConfig","CustomerAgentEntitlement"]}),
     action(saveCredential,{entities:["PortalCredential"]}),
     action(decideReview,{entities:["PortalReview"]}),
-    action(launchAgent,{entities:["PortalAgentConfig"]}),
+    action(launchAgent,{entities:["PortalAgentConfig","CustomerAgentEntitlement"]}),
     api("POST","/portal/review-events",portalReviewWebhook,{entities:["PortalReview","PortalAgentConfig"]}),
     action(beginGoogleSync,{entities:["PortalGoogleOAuthState"]}),
     api("GET","/portal/google/callback",googleSyncCallback,{entities:["PortalGoogleOAuthState","PortalGoogleConnection"]}),

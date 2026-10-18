@@ -38,13 +38,13 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
     name: prettyPaymentPlanName(PaymentPlanId.Hobby),
     price: "$9.99",
     description: "All you need to get started",
-    features: ["Limited monthly usage", "Basic support"],
+    features: ["Starter subscription billing", "Agent access assigned separately"],
   },
   [PaymentPlanId.Pro]: {
     name: prettyPaymentPlanName(PaymentPlanId.Pro),
     price: "$19.99",
     description: "Our most popular plan",
-    features: ["Unlimited monthly usage", "Priority customer support"],
+    features: ["Review plan details at checkout", "Priority support, where provided"],
   },
   [PaymentPlanId.Credits10]: {
     name: prettyPaymentPlanName(PaymentPlanId.Credits10),
@@ -122,7 +122,7 @@ export function PricingPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div id="pricing" className="mx-auto max-w-4xl text-center">
           <h2 className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-            Pick your <span className="text-primary">pricing</span>
+            Choose your <span className="text-cyan-300">starting plan</span>
           </h2>
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-slate-300">Start with a clear workflow, connect approved tools and stay in control. Plan features below reflect the currently configured billing products, not a guarantee that any specific agent is included.</p>

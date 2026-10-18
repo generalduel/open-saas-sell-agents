@@ -1,48 +1,26 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { Link, routes } from "wasp/client/router";
+import { Link } from "wasp/client/router";
 
-const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
-
-export enum CheckoutResult {
-  Success = "success",
-  Canceled = "canceled",
-}
-
+const REDIRECT_DELAY_MS = 4000;
+export enum CheckoutResult { Success = "success", Canceled = "canceled" }
 export function CheckoutResultPage() {
   const navigate = useNavigate();
-  const [urlSearchParams] = useSearchParams();
-  const status = urlSearchParams.get("status");
-
+  const [params] = useSearchParams();
+  const status = params.get("status");
+  const valid = status === CheckoutResult.Success || status === CheckoutResult.Canceled;
   useEffect(() => {
-    const accountPageRedirectTimeoutId = setTimeout(() => {
-      navigate("/portal");
-    }, ACCOUNT_PAGE_REDIRECT_DELAY_MS);
+    if (!valid) return;
+    const timer = setTimeout(() => navigate("/portal"), REDIRECT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [navigate, valid]);
 
-    return () => {
-      clearTimeout(accountPageRedirectTimeoutId);
-    };
-  }, [navigate]);
-
-  if (
-    status === null ||
-    (status !== CheckoutResult.Success && status !== CheckoutResult.Canceled)
-  ) {
-    return <Link to="/portal">Return to your workspace</Link>;
-  }
-
-  return (
-    <div className="mt-10 flex flex-col items-stretch sm:mx-6 sm:items-center">
-      <div className="flex flex-col gap-4 px-4 py-8 text-center shadow-xl ring-1 ring-gray-900/10 sm:max-w-md sm:rounded-lg sm:px-10 dark:ring-gray-100/10">
-        <h1 className="text-xl font-semibold">
-          {status === CheckoutResult.Success && "Checkout returned successfully — awaiting payment verification"}
-          {status === CheckoutResult.Canceled && "Checkout canceled."}
-        </h1>
-        <span className="">
-          This is not confirmation that payment was captured. Your access is assigned only after verified payment. Redirecting to your workspace in{" "}
-          {ACCOUNT_PAGE_REDIRECT_DELAY_MS / 1000} seconds...
-        </span>
-      </div>
-    </div>
-  );
+  if (!valid) return <main className="min-h-[60vh] bg-[#08131d] px-6 py-20 text-white"><h1 className="text-3xl font-semibold">Checkout status unavailable</h1><p className="mt-4 text-slate-300">We cannot confirm a checkout result from this link. Check your billing status in the customer portal.</p><Link to="/portal" className="mt-7 inline-block text-cyan-300 underline">Return to your workspace</Link></main>;
+  return <main className="min-h-[60vh] bg-[#08131d] px-6 py-20 text-white"><div className="mx-auto max-w-xl rounded-2xl border border-white/15 bg-[#102630] p-9">
+    <p className="text-sm font-semibold text-cyan-300">AI WORKFORCE · BILLING</p>
+    <h1 className="mt-5 text-3xl font-semibold">{status === CheckoutResult.Success ? "Checkout returned — confirmation pending" : "Checkout was canceled"}</h1>
+    <p className="mt-5 text-slate-300">{status === CheckoutResult.Success ? "The payment processor must confirm your purchase before account or agent access is updated. A checkout redirect alone is not payment confirmation." : "No purchase was confirmed by this checkout. You can return to your workspace or choose a plan when ready."}</p>
+    <p className="mt-5 text-sm text-slate-400">Returning to your workspace in {REDIRECT_DELAY_MS / 1000} seconds…</p>
+    <Link to="/portal" className="mt-7 inline-block rounded-full bg-cyan-300 px-6 py-3 font-semibold text-[#08131d]">Go to my workspace</Link>
+  </div></main>;
 }

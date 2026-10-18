@@ -56,6 +56,7 @@ export function Footer({
             </ul>
           </div>
         </div>
+        <nav aria-label="Legal and support" className="mt-12 flex flex-wrap gap-6 border-t border-white/15 pt-8 text-sm text-slate-300"><a href="/support" className="hover:text-cyan-300">Support</a><a href="/privacy" className="hover:text-cyan-300">Privacy information</a><a href="/terms" className="hover:text-cyan-300">Service terms</a></nav>
       </footer>
     </div>
   );

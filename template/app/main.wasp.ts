@@ -5,6 +5,7 @@ import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type:
 import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
 import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
 import { AgentDetailPage } from "./src/landing-page/AgentDetailPage" with { type: "ref" };
+import { SupportPage, PrivacyPage, TermsPage } from "./src/landing-page/LaunchInfoPages" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
 import { adminSpec } from "./src/admin/admin.wasp";
@@ -48,6 +49,9 @@ export default app({
     // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
     route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
     route("AgentDetailRoute", "/agents/:slug", page(AgentDetailPage)),
+    route("SupportRoute", "/support", page(SupportPage)),
+    route("PrivacyRoute", "/privacy", page(PrivacyPage)),
+    route("TermsRoute", "/terms", page(TermsPage)),
     route("AgentsRoute", "/agents", page(LandingPage)),
     route("NotFoundRoute", "*", page(NotFoundPage)),
     authSpec,

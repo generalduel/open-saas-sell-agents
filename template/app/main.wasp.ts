@@ -26,7 +26,7 @@ import { beginGoogleSync,googleSyncCallback } from "./src/portal/googleOAuth" wi
 export default app({
   name: "OpenSaaS",
   wasp: { version: "^0.26.0" },
-  title: "My Open SaaS App",
+  title: "AI Workforce | Managed AI Agents",
   head,
   auth: authConfig,
   db: {
@@ -56,7 +56,7 @@ export default app({
     route("AgentCredentialsRoute", "/portal/credentials", page(AgentCredentialsPage, { authRequired: true })),
     query(getAgentCredentialWorkspace,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
     action(provisionAgentCredential,{entities:["CustomerAgentEntitlement","CustomerAgentCredential"]}),
-    query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview"]}),
+    query(getPortalState,{entities:["User","PortalAgentConfig","PortalCredential","PortalGoogleConnection","PortalReview","CustomerAgentEntitlement","CustomerAgentCredential"]}),
     action(saveAgentConfig,{entities:["PortalAgentConfig"]}),
     action(saveCredential,{entities:["PortalCredential"]}),
     action(decideReview,{entities:["PortalReview"]}),

@@ -12,7 +12,7 @@ RUN npm i -g npm@11 @wasp.sh/wasp-cli@0.26.1
 WORKDIR /src
 COPY template/app/ ./
 RUN rm -rf .wasp node_modules .env.server .env.client
-RUN wasp build
+RUN wasp install && wasp build
 
 # Client: API URL and client env vars are baked in at build time.
 ARG REACT_APP_API_URL

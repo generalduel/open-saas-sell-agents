@@ -29,8 +29,8 @@ import {
 
 const emailAuthMethod: EmailAuthConfig = {
   fromField: {
-    name: "Open SaaS App",
-    email: "me@example.com",
+    name: "My 2nd Workforce",
+    email: "support@my2ndworkforce.com",
   },
   emailVerification: {
     clientRoute: "EmailVerificationRoute",
@@ -45,22 +45,22 @@ const emailAuthMethod: EmailAuthConfig = {
 
 // Plug the following authentication methods in the `authConfig` below to enable them.
 // Do note that `email` and `usernameAndPassword` are mutually exclusive.
-// @ts-expect-error Demo purposes
+// @ts-ignore Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const usernameAndPasswordAuthMethod: UsernameAndPasswordConfig = {};
-// @ts-expect-error Demo purposes
+// @ts-ignore Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const googleAuthMethod: SocialAuthConfig = {
   userSignupFields: getGoogleUserFields,
   configFn: getGoogleAuthConfig,
 };
-// @ts-expect-error Demo purposes
+// @ts-ignore Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const gitGubAuthMethod: SocialAuthConfig = {
   userSignupFields: getGitHubUserFields,
   configFn: getGitHubAuthConfig,
 };
-// @ts-expect-error Demo purposes
+// @ts-ignore Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const discordAuthMethod: SocialAuthConfig = {
   userSignupFields: getDiscordUserFields,

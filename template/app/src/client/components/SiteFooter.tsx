@@ -2,6 +2,8 @@ import "../../landing-page/landing.css";
 import { Link } from "react-router";
 import { agents, agentHref } from "../../landing-page/agentCatalog";
 import { BOOKING_URL } from "../../landing-page/homeContent";
+import { useCaseHref, useCases } from "../../landing-page/useCases";
+import { photoCredits } from "../../landing-page/agentPeople";
 
 // Site-wide footer, rendered by App.tsx on every non-admin page.
 // Self-contained colors so it reads the same in light and dark mode.
@@ -33,7 +35,7 @@ export function SiteFooter() {
       <h2 id="site-footer-heading" className="sr-only">
         Site footer
       </h2>
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:py-20">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_2fr_.9fr_.9fr] lg:py-20">
         <div>
           <p className="text-2xl font-extrabold" style={{ fontStretch: "118%" }}>
             AI Workforce
@@ -63,6 +65,24 @@ export function SiteFooter() {
             <li>
               <Link to="/agents" className={`${linkClass} font-semibold text-white`}>
                 All 12 agents
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Use cases">
+          <h3 className="text-sm font-semibold">Use cases</h3>
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3">
+            {useCases.map((u) => (
+              <li key={u.slug}>
+                <Link to={useCaseHref(u.slug)} className={linkClass}>
+                  {u.name}
+                </Link>
+              </li>
+            ))}
+            <li className="col-span-2">
+              <Link to="/use-cases" className={`${linkClass} font-semibold text-white`}>
+                View all use cases
               </Link>
             </li>
           </ul>
@@ -120,6 +140,21 @@ export function SiteFooter() {
           <p>&copy; {new Date().getFullYear()} AI Workforce, my2ndworkforce.com</p>
           <p>Every outbound agent action waits for your approval by default.</p>
         </div>
+        <p className="mx-auto max-w-7xl px-4 pb-6 text-xs leading-relaxed text-white/45 sm:px-6">
+          Agent portraits are stock photos of models from{" "}
+          <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
+            Unsplash
+          </a>{" "}
+          that represent AI agents. They are not employees or customers. Photos by{" "}
+          {photoCredits.map((c, i) => (
+            <span key={c.name}>
+              <a href={c.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
+                {c.name}
+              </a>
+              {i < photoCredits.length - 1 ? ", " : "."}
+            </span>
+          ))}
+        </p>
       </div>
     </footer>
   );

@@ -73,16 +73,39 @@ export const approvalLine: Record<string, string> = {
 /** Catalog items that are services rather than software agents. */
 export const serviceSlugs = new Set(["ai-workshops"]);
 
+/** Hero checklist (capability bullets). */
+export const capabilities = [
+  "Build a team of AI agents for the jobs you never get to",
+  "Hand off follow-ups, scheduling, sorting and admin",
+  "Connect your website, inbox, calendar and CRM",
+  "Train every agent on your own files: price lists, FAQs, policies",
+];
+
+/** Tools agents are built to connect with. Intended integration targets; each is validated per client. */
+export const connectTargets = [
+  "Gmail",
+  "Outlook",
+  "Google Calendar",
+  "Microsoft 365",
+  "Your website",
+  "Moxie CRM",
+  "Google Drive",
+  "SharePoint",
+];
+
 export const steps = [
   {
+    metaphor: "Hire your team",
     title: "Manage your agents",
     body: "Turn on the agents you want, tell each one how your business works, and decide what needs your approval. One dashboard for every agent.",
   },
   {
+    metaphor: "Give them a desk",
     title: "Connect your website",
     body: "Add your website so your agents know your services and pages, and can pick up the inquiries that come in through it.",
   },
   {
+    metaphor: "Hand them the handbook",
     title: "Add your knowledge files",
     body: "Upload what you already have: price lists, FAQs, policies, service menus. Your agents answer from your facts instead of guessing.",
   },

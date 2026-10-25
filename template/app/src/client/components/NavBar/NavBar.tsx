@@ -1,5 +1,5 @@
-import { LogIn, Menu } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ChevronDown, LogIn, Menu } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useState, type ReactNode } from "react";
 import { Link as ReactRouterLink } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
@@ -18,10 +18,24 @@ import logo from "../../static/logo.svg";
 import { cn } from "../../utils";
 import { DarkModeSwitcher } from "../DarkModeSwitcher";
 import { Announcement } from "./Announcement";
+import { AgentAvatar } from "../../../landing-page/agentPeople";
+
+export interface NavigationLink {
+  name: string;
+  to: string;
+  description?: string;
+  /** Agent catalog slug: shows that agent's portrait next to the link. */
+  avatar?: string;
+}
 
 export interface NavigationItem {
   name: string;
   to: string;
+  /** Submenu groups. Items without groups render as plain links. */
+  groups?: { heading?: string; links: NavigationLink[] }[];
+  /** Wide multi-column panel centered under the nav bar. */
+  mega?: boolean;
+  footer?: NavigationLink;
 }
 
 export function NavBar({
@@ -64,7 +78,7 @@ export function NavBar({
         >
           <nav
             className={cn(
-              "flex items-center justify-between transition-all duration-300",
+              "relative flex items-center justify-between transition-all duration-300",
               {
                 "p-3 lg:px-6": isScrolled,
                 "p-6 lg:px-8": !isScrolled,
@@ -91,7 +105,7 @@ export function NavBar({
                 </span>
               </WaspRouterLink>
 
-              <ul className="ml-4 hidden items-center gap-6 lg:flex">
+              <ul className="ml-4 hidden items-center gap-4 lg:flex xl:gap-6">
                 {renderNavigationItems(navigationItems)}
               </ul>
             </div>
@@ -176,7 +190,7 @@ function NavBarMobileMenu({
             />
           </button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+        <SheetContent side="right" className="w-[300px] overflow-y-auto sm:w-[400px]">
           <SheetHeader>
             <SheetTitle className="flex items-center">
               <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -217,28 +231,144 @@ function NavBarMobileMenu({
   );
 }
 
+function NavItemLink({
+  to,
+  className,
+  onClick,
+  children,
+}: {
+  to: string;
+  className?: string;
+  onClick?: () => void;
+  children: ReactNode;
+}) {
+  if (to.startsWith("http")) {
+    return (
+      <a href={to} target="_blank" rel="noopener noreferrer" className={className} onClick={onClick}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <ReactRouterLink to={to} className={className} onClick={onClick}>
+      {children}
+    </ReactRouterLink>
+  );
+}
+
 function renderNavigationItems(
   navigationItems: NavigationItem[],
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>,
 ) {
+  const isMobile = !!setMobileMenuOpen;
+  const close = setMobileMenuOpen && (() => setMobileMenuOpen(false));
   const menuStyles = cn({
     "block rounded-lg px-3 py-2 text-sm font-medium leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors":
-      !!setMobileMenuOpen,
+      isMobile,
     "text-sm font-normal leading-6 text-foreground duration-300 ease-in-out hover:text-primary transition-colors":
-      !setMobileMenuOpen,
+      !isMobile,
   });
 
   return navigationItems.map((item) => {
+    if (!item.groups) {
+      return (
+        <li key={item.name}>
+          <NavItemLink to={item.to} className={menuStyles} onClick={close}>
+            {item.name}
+          </NavItemLink>
+        </li>
+      );
+    }
+
+    if (isMobile) {
+      return (
+        <li key={item.name}>
+          <details className="group">
+            <summary className={cn(menuStyles, "flex cursor-pointer list-none items-center justify-between")}>
+              {item.name}
+              <ChevronDown size={16} className="transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
+            <div className="mb-2 ml-3 border-l border-border pl-3">
+              {item.groups.map((g, gi) => (
+                <div key={g.heading ?? gi} className="py-1">
+                  {g.heading && <p className="px-2 pt-2 text-xs font-semibold text-muted-foreground">{g.heading}</p>}
+                  <ul>
+                    {g.links.map((l) => (
+                      <li key={l.name + l.to}>
+                        <NavItemLink
+                          to={l.to}
+                          onClick={close}
+                          className="block rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent"
+                        >
+                          {l.name}
+                        </NavItemLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {item.footer && (
+                <NavItemLink to={item.footer.to} onClick={close} className="block px-2 py-2 text-sm font-semibold text-primary">
+                  {item.footer.name}
+                </NavItemLink>
+              )}
+            </div>
+          </details>
+        </li>
+      );
+    }
+
     return (
-      <li key={item.name}>
-        <ReactRouterLink
-          to={item.to}
-          className={menuStyles}
-          onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
-          target={item.to.startsWith("http") ? "_blank" : undefined}
-        >
+      <li key={item.name} className={cn("group/nav", !item.mega && "relative")}>
+        <NavItemLink to={item.to} className={cn(menuStyles, "inline-flex items-center gap-1")}>
           {item.name}
-        </ReactRouterLink>
+          <ChevronDown
+            size={14}
+            className="transition-transform duration-200 group-hover/nav:rotate-180 group-focus-within/nav:rotate-180"
+            aria-hidden="true"
+          />
+        </NavItemLink>
+        <div
+          className={cn(
+            "invisible absolute top-full z-50 pt-3 opacity-0 transition-opacity duration-150 group-focus-within/nav:visible group-focus-within/nav:opacity-100 group-hover/nav:visible group-hover/nav:opacity-100",
+            item.mega ? "left-1/2 w-[min(60rem,calc(100vw-2rem))] -translate-x-1/2" : "-left-4 w-72",
+          )}
+        >
+          <div className="border-border bg-background text-foreground rounded-2xl border p-5 shadow-xl">
+            <div className={cn("grid gap-6", item.mega && "grid-cols-4")}>
+              {item.groups.map((g, gi) => (
+                <div key={g.heading ?? gi}>
+                  {g.heading && <p className="text-muted-foreground mb-2 px-2 text-xs font-semibold">{g.heading}</p>}
+                  <ul className="space-y-0.5">
+                    {g.links.map((l) => (
+                      <li key={l.name + l.to}>
+                        <NavItemLink
+                          to={l.to}
+                          className="hover:bg-accent hover:text-accent-foreground flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors"
+                        >
+                          {l.avatar && <AgentAvatar slug={l.avatar} size={30} decorative badge={false} />}
+                          <span className="min-w-0">
+                            <span className="block font-medium leading-snug">{l.name}</span>
+                            {l.description && (
+                              <span className="text-muted-foreground block text-xs leading-snug">{l.description}</span>
+                            )}
+                          </span>
+                        </NavItemLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            {item.footer && (
+              <div className="border-border mt-4 border-t pt-3">
+                <NavItemLink to={item.footer.to} className="text-primary px-2 text-sm font-semibold hover:underline">
+                  {item.footer.name}
+                </NavItemLink>
+              </div>
+            )}
+          </div>
+        </div>
       </li>
     );
   });

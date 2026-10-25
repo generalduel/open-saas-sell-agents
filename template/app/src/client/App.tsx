@@ -20,7 +20,9 @@ export function App() {
   const isMarketingPage = useMemo(() => {
     return (
       location.pathname === routes.LandingPageRoute.to ||
-      location.pathname === routes.PricingPageRoute.to
+      location.pathname === routes.PricingPageRoute.to ||
+      location.pathname.startsWith("/use-cases") ||
+      location.pathname.startsWith("/agents")
     );
   }, [location]);
 

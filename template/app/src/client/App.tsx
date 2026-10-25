@@ -9,6 +9,7 @@ import {
   marketingNavigationItems,
 } from "./components/NavBar/constants";
 import { CookieConsentBanner } from "./components/cookie-consent/Banner";
+import { SiteFooter } from "./components/SiteFooter";
 
 /**
  * use this component to wrap all child components
@@ -61,6 +62,7 @@ export function App() {
             <div className="max-w-(--breakpoint-2xl) mx-auto">
               <Outlet />
             </div>
+            <SiteFooter />
           </>
         )}
       </div>

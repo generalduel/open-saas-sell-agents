@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap");
+
+/* Home page tokens. Scoped to .wf so other pages are unaffected. */
+.wf {
+  --wf-cobalt: #1f35e8;
+  --wf-cobalt-deep: #1626b8;
+  --wf-yellow: #ffd23f;
+  --wf-ink: #0b1033;
+  --wf-paper: #f3f5fa;
+  --wf-steel: #545c7d;
+  --wf-line: #d5daea;
+  --wf-done: #1f8f63;
+  font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  font-stretch: 100%;
+  background: var(--wf-paper);
+  color: var(--wf-ink);
+}
+
+.wf-display {
+  font-stretch: 125%;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.wf-wide {
+  font-stretch: 118%;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.wf-narrow {
+  font-stretch: 75%;
+}
+
+.wf :focus-visible {
+  outline: 3px solid var(--wf-yellow);
+  outline-offset: 3px;
+}
+
+.wf-paper-section :focus-visible {
+  outline-color: var(--wf-cobalt);
+}
+
+/* The one orchestrated moment: the hero shift board clocks in row by row. */
+@keyframes wf-clock-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wf-row {
+  animation: wf-clock-in 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes wf-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 210, 63, 0);
+  }
+}
+
+.wf-pulse {
+  animation: wf-pulse 1.8s ease-in-out 2.4s 3;
+}
+
+/* ID-badge lanyard slot on agent cards */
+.wf-badge::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 44px;
+  height: 8px;
+  margin-left: -22px;
+  border-radius: 999px;
+  background: var(--wf-paper);
+  box-shadow: inset 0 1px 2px rgba(11, 16, 51, 0.25);
+}
+
+.wf-faq summary {
+  list-style: none;
+}
+.wf-faq summary::-webkit-details-marker {
+  display: none;
+}
+.wf-faq details[open] .wf-faq-icon {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wf-row,
+  .wf-pulse {
+    animation: none;
+  }
+  .wf * {
+    transition: none !important;
+  }
+}

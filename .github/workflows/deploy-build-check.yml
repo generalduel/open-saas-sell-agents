@@ -44,12 +44,13 @@ jobs:
           sed -i 's/=GENERATED$/=ci-generated-value-1234567890/; s/=FILL_ME$/=ci-dummy/' .env
           sed -i "s|^PORTAL_ENCRYPTION_KEY=.*|PORTAL_ENCRYPTION_KEY=$(openssl rand -base64 32)|" .env
           printf 'services:\n  server:\n    ports: ["3001:3001"]\n' > docker-compose.ci.yml
+          set +e
           docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build db server
-          for i in $(seq 1 60); do curl -fsS -o /dev/null http://localhost:3001/ && break; sleep 5; done
+          for i in $(seq 1 36); do curl -fsS -o /dev/null http://localhost:3001/ && break; sleep 5; done
           S=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3001/)
           T=$(docker compose exec -T db psql -U opensaas_app -d opensaas -tAc "select count(*) from information_schema.tables where table_schema='public'")
           M=$(docker compose exec -T db psql -U opensaas_app -d opensaas -tAc "select migration_name from _prisma_migrations")
-          LOG=$(docker compose logs --tail=40 server | sed 's/\x1b\[[0-9;]*m//g' | tr '\n' '|' | cut -c1-5000)
+          LOG=$(docker compose logs --tail=60 server | sed 's/\x1b\[[0-9;]*m//g' | tr '\n' '|' | cut -c1-5000)
           echo "::notice title=SMOKE::http=$S tables=$T migrations=$M"
           echo "::notice title=SERVER_LOG::$LOG"
           test "$S" != "000"

@@ -5,6 +5,7 @@ import { PrimaryCta, StaffCard, UseCaseCard, agentBySlug } from "./funnelUi";
 import { steps } from "./homeContent";
 import { useCases, useCasesBySlug } from "./useCases";
 import "./landing.css";
+import { usePageTitle } from "../client/hooks/usePageTitle";
 
 const sentenceCase = (s: string) =>
   /^[A-Z]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1);
@@ -12,6 +13,7 @@ const sentenceCase = (s: string) =>
 export function UseCaseDetailPage() {
   const { slug } = useParams();
   const useCase = slug ? useCasesBySlug.get(slug) : undefined;
+  usePageTitle(useCase?.title ?? "Use case not found");
 
   if (!useCase) {
     return (

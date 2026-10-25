@@ -8,7 +8,8 @@ export const userMenuItems = [
     name: "AI Scheduler (Demo App)",
     to: routes.DemoAppRoute.to,
     icon: LayoutDashboard,
-    isAdminOnly: false,
+    // Template demo: hidden from customers, still reachable for admins.
+    isAdminOnly: true,
     isAuthRequired: true,
   },
   {

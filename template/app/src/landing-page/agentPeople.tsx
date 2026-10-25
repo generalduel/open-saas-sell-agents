@@ -1,3 +1,5 @@
+import { GraduationCap } from "lucide-react";
+
 // "Agents as people": each catalog agent has a persona name and a stock
 // professional headshot. The headshots are Unsplash photos of models, used under the
 // Unsplash License, and they represent AI agents. They are NOT employees or
@@ -131,6 +133,15 @@ export function AgentAvatar({
           alt={decorative ? "" : `${p.name}, AI agent (stock photo)`}
           className="h-full w-full rounded-full bg-[#dfe5ff] object-cover"
         />
+      ) : slug === "ai-workshops" ? (
+        <span
+          role={decorative ? undefined : "img"}
+          aria-label={decorative ? undefined : "AI Workshops, live service"}
+          aria-hidden={decorative ? true : undefined}
+          className="grid h-full w-full place-items-center rounded-full bg-[#1f35e8] text-white"
+        >
+          <GraduationCap size={Math.round(size * 0.45)} aria-hidden="true" />
+        </span>
       ) : (
         <span
           role={decorative ? undefined : "img"}

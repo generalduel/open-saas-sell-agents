@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router";
 import {
   ArrowRight,
   Check,
@@ -31,12 +31,22 @@ import {
 } from "./homeContent";
 import { useCaseCategories, useCaseHref, useCases } from "./useCases";
 import "./landing.css";
+import { SchemaMarkup } from "./components/SchemaMarkup";
 
 const bySlug = agentBySlug;
 
 export function LandingPage() {
+  const location = useLocation();
+  // /agents shares this page: jump to the agent showcase.
+  useEffect(() => {
+    if (location.pathname === "/agents") {
+      document.getElementById("agents")?.scrollIntoView();
+    }
+  }, [location.pathname]);
+
   return (
     <div className="wf">
+      <SchemaMarkup />
       <main>
         <Hero />
         <Roster />

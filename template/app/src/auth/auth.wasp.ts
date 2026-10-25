@@ -29,8 +29,8 @@ import {
 
 const emailAuthMethod: EmailAuthConfig = {
   fromField: {
-    name: "Open SaaS App",
-    email: "me@example.com",
+    name: "My 2nd Workforce",
+    email: "support@my2ndworkforce.com",
   },
   emailVerification: {
     clientRoute: "EmailVerificationRoute",
@@ -80,7 +80,7 @@ export const authConfig: Auth = {
     // discord: discordAuthMethod,
   },
   onAuthFailedRedirectTo: "/login",
-  onAuthSucceededRedirectTo: "/demo-app",
+  onAuthSucceededRedirectTo: "/portal",
 };
 
 export const authSpec: Spec = [

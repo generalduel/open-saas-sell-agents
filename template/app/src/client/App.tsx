@@ -17,12 +17,12 @@ import { SiteFooter } from "./components/SiteFooter";
  */
 export function App() {
   const location = useLocation();
+  // The template demo pages (AI Scheduler, File Upload) keep their own menu;
+  // every other page uses the main site menu.
   const isMarketingPage = useMemo(() => {
-    return (
-      location.pathname === routes.LandingPageRoute.to ||
-      location.pathname === routes.PricingPageRoute.to ||
-      location.pathname.startsWith("/use-cases") ||
-      location.pathname.startsWith("/agents")
+    return !(
+      location.pathname.startsWith(routes.DemoAppRoute.to) ||
+      location.pathname.startsWith(routes.FileUploadRoute.to)
     );
   }, [location]);
 

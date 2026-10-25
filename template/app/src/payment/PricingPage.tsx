@@ -9,14 +9,9 @@ import {
 } from "wasp/client/operations";
 import { routes } from "wasp/client/router";
 import { Alert, AlertDescription } from "../client/components/ui/alert";
-import { Button } from "../client/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardTitle,
-} from "../client/components/ui/card";
 import { cn } from "../client/utils";
+import "../landing-page/landing.css";
+import { usePageTitle } from "../client/hooks/usePageTitle";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -55,6 +50,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 };
 
 export function PricingPage() {
+  usePageTitle("Plans and pricing");
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -118,111 +114,90 @@ export function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08131d] py-16 text-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div id="pricing" className="mx-auto max-w-4xl text-center">
-          <h2 className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-            Pick your <span className="text-primary">pricing</span>
-          </h2>
+    <div className="wf min-h-screen">
+      <section className="bg-[var(--wf-cobalt)] text-white">
+        <div id="pricing" className="mx-auto max-w-7xl px-4 pb-16 pt-14 sm:px-6 md:pb-20 md:pt-20">
+          <h1 className="wf-display max-w-4xl text-[clamp(2.6rem,6vw,5rem)]">Plans and pricing</h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
+            Start with a clear workflow, connect approved tools and stay in control.
+            Plan features reflect the currently configured billing products, not a
+            guarantee that any specific agent is included.
+          </p>
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-slate-300">Start with a clear workflow, connect approved tools and stay in control. Plan features below reflect the currently configured billing products, not a guarantee that any specific agent is included.</p>
+      </section>
+      <div className="wf-paper-section mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20">
         {errorMessage && (
-          <Alert variant="destructive" className="mt-8">
+          <Alert variant="destructive" className="mb-8">
             <AlertDescription>{errorMessage}</AlertDescription>
           </Alert>
         )}
-        <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8">
-          {Object.values(PaymentPlanId).map((planId) => (
-            <Card
-              key={planId}
-              className={cn(
-                "relative flex grow flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-lg",
-                {
-                  "ring-cyan-300 ring-2":
-                    planId === bestDealPaymentPlanId,
-                  "ring-white/20 ring-1 lg:my-8":
-                    planId !== bestDealPaymentPlanId,
-                },
-              )}
-            >
-              {planId === bestDealPaymentPlanId && (
-                <div
-                  className="absolute right-0 top-0 -z-10 h-full w-full transform-gpu blur-3xl"
-                  aria-hidden="true"
-                >
-                  <div
-                    className="from-primary/40 via-primary/20 to-primary/10 bg-linear-to-br absolute h-full w-full opacity-30"
-                    style={{
-                      clipPath: "circle(670% at 50% 50%)",
-                    }}
-                  />
-                </div>
-              )}
-              <CardContent className="h-full justify-between p-8 xl:p-10">
-                <div className="flex items-center justify-between gap-x-4">
-                  <CardTitle
-                    id={planId}
-                    className="text-white text-lg font-semibold leading-8"
-                  >
+        <div className="grid gap-6 lg:grid-cols-3">
+          {Object.values(PaymentPlanId).map((planId) => {
+            const best = planId === bestDealPaymentPlanId;
+            return (
+              <article
+                key={planId}
+                className={cn(
+                  "flex flex-col rounded-[24px] border-2 bg-white p-8 text-[var(--wf-ink)]",
+                  best ? "border-[var(--wf-cobalt)]" : "border-[var(--wf-line)]",
+                )}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <h2 id={planId} className="wf-wide text-xl">
                     {paymentPlanCards[planId].name}
-                  </CardTitle>
+                  </h2>
+                  {best && (
+                    <span className="rounded-full bg-[var(--wf-yellow)] px-3 py-1 text-xs font-semibold">
+                      Most popular
+                    </span>
+                  )}
                 </div>
-                <p className="text-slate-300 mt-4 text-sm leading-6">
-                  {paymentPlanCards[planId].description}
-                </p>
-                <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className="text-white text-4xl font-bold tracking-tight">
-                    {paymentPlanCards[planId].price}
-                  </span>
-                  <span className="text-slate-300 text-sm font-semibold leading-6">
-                    {paymentPlans[planId].effect.kind === "subscription" &&
-                      "/month"}
+                <p className="mt-3 text-[var(--wf-steel)]">{paymentPlanCards[planId].description}</p>
+                <p className="mt-6 flex items-baseline gap-1">
+                  <span className="wf-display text-5xl">{paymentPlanCards[planId].price}</span>
+                  <span className="text-sm font-semibold text-[var(--wf-steel)]">
+                    {paymentPlans[planId].effect.kind === "subscription" && "/month"}
                   </span>
                 </p>
-                <ul
-                  role="list"
-                  className="text-slate-300 mt-8 space-y-3 text-sm leading-6"
-                >
+                <ul role="list" className="mt-8 flex-1 space-y-3 text-[15px]">
                   {paymentPlanCards[planId].features.map((feature) => (
-                    <li key={feature} className="flex gap-x-3">
-                      <CheckCircle
-                        className="text-primary h-5 w-5 flex-none"
-                        aria-hidden="true"
-                      />
+                    <li key={feature} className="flex gap-3">
+                      <CheckCircle className="mt-0.5 h-5 w-5 flex-none text-[var(--wf-cobalt)]" aria-hidden="true" />
                       {feature}
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-              <CardFooter>
-                {isUserSubscribed ? (
-                  <Button
-                    onClick={handleCustomerPortalClick}
-                    disabled={isCustomerPortalUrlLoading}
-                    aria-describedby="manage-subscription"
-                    variant={
-                      planId === bestDealPaymentPlanId ? "default" : "outline"
-                    }
-                    className="w-full"
-                  >
-                    Manage Subscription
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => handleBuyNowClick(planId)}
-                    aria-describedby={planId}
-                    variant={
-                      planId === bestDealPaymentPlanId ? "default" : "outline"
-                    }
-                    className="w-full"
-                    disabled={isPaymentLoading}
-                  >
-                    {user ? "Buy plan" : "Log in to buy plan"}
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
+                <div className="mt-8">
+                  {isUserSubscribed ? (
+                    <button
+                      type="button"
+                      onClick={handleCustomerPortalClick}
+                      disabled={isCustomerPortalUrlLoading}
+                      aria-describedby="manage-subscription"
+                      className="wf-wide w-full rounded-full bg-[var(--wf-ink)] px-6 py-3.5 text-white transition-colors hover:bg-[var(--wf-cobalt)] disabled:opacity-50"
+                    >
+                      Manage subscription
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleBuyNowClick(planId)}
+                      aria-describedby={planId}
+                      disabled={isPaymentLoading}
+                      className={cn(
+                        "wf-wide w-full rounded-full px-6 py-3.5 transition-colors disabled:opacity-50",
+                        best
+                          ? "bg-[var(--wf-cobalt)] text-white hover:bg-[var(--wf-ink)]"
+                          : "border-2 border-[var(--wf-ink)] hover:bg-[var(--wf-ink)] hover:text-white",
+                      )}
+                    >
+                      {user ? "Buy plan" : "Log in to buy plan"}
+                    </button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </div>

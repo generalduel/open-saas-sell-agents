@@ -28,7 +28,7 @@ import { beginGoogleSync,googleSyncCallback } from "./src/portal/googleOAuth" wi
 export default app({
   name: "OpenSaaS",
   wasp: { version: "^0.26.0" },
-  title: "My Open SaaS App",
+  title: "AI Workforce | Managed AI agents for your business",
   head,
   auth: authConfig,
   db: {

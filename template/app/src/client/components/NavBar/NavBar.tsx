@@ -1,6 +1,6 @@
-import { ChevronDown, LogIn, Menu } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState, type ReactNode } from "react";
-import { Link as ReactRouterLink } from "react-router";
+import { ChevronDown, GraduationCap, LogIn, Menu } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState, type ReactNode } from "react";
+import { Link as ReactRouterLink, useLocation } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import {
@@ -101,9 +101,7 @@ export function NavBar({
                 </span>
               </WaspRouterLink>
 
-              <ul className="ml-4 hidden items-center gap-4 lg:flex xl:gap-6">
-                {renderNavigationItems(navigationItems)}
-              </ul>
+              <DesktopNav items={navigationItems} />
             </div>
             <NavBarMobileMenu
               isScrolled={isScrolled}
@@ -314,60 +312,129 @@ function renderNavigationItems(
       );
     }
 
-    return (
-      <li key={item.name} className={cn("group/nav", !item.mega && "relative")}>
-        <NavItemLink to={item.to} className={cn(menuStyles, "inline-flex items-center gap-1")}>
-          {item.name}
-          <ChevronDown
-            size={14}
-            className="transition-transform duration-200 group-hover/nav:rotate-180 group-focus-within/nav:rotate-180"
-            aria-hidden="true"
-          />
-        </NavItemLink>
-        <div
-          className={cn(
-            "invisible absolute top-full z-50 pt-3 opacity-0 transition-opacity duration-150 group-focus-within/nav:visible group-focus-within/nav:opacity-100 group-hover/nav:visible group-hover/nav:opacity-100",
-            item.mega ? "left-1/2 w-[min(60rem,calc(100vw-2rem))] -translate-x-1/2" : "-left-4 w-72",
-          )}
-        >
-          <div className="border-border bg-background text-foreground rounded-2xl border p-5 shadow-xl">
-            <div className={cn("grid gap-6", item.mega && "grid-cols-4")}>
-              {item.groups.map((g, gi) => (
-                <div key={g.heading ?? gi}>
-                  {g.heading && <p className="text-muted-foreground mb-2 px-2 text-xs font-semibold">{g.heading}</p>}
-                  <ul className="space-y-0.5">
-                    {g.links.map((l) => (
-                      <li key={l.name + l.to}>
-                        <NavItemLink
-                          to={l.to}
-                          className="hover:bg-accent hover:text-accent-foreground flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors"
-                        >
-                          {l.avatar && <AgentAvatar slug={l.avatar} size={30} decorative badge={false} />}
-                          <span className="min-w-0">
-                            <span className="block font-medium leading-snug">{l.name}</span>
-                            {l.description && (
-                              <span className="text-muted-foreground block text-xs leading-snug">{l.description}</span>
-                            )}
-                          </span>
-                        </NavItemLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            {item.footer && (
-              <div className="border-border mt-4 border-t pt-3">
-                <NavItemLink to={item.footer.to} className="text-primary px-2 text-sm font-semibold hover:underline">
-                  {item.footer.name}
-                </NavItemLink>
-              </div>
-            )}
-          </div>
-        </div>
-      </li>
-    );
+    return null;
   });
+}
+
+/** Desktop menu: hover or click to open, Escape / outside click / navigation to close. */
+function DesktopNav({ items }: { items: NavigationItem[] }) {
+  const [open, setOpen] = useState<string | null>(null);
+  const location = useLocation();
+  const ref = useRef<HTMLUListElement>(null);
+
+  useEffect(() => setOpen(null), [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(null);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, [open]);
+
+  const linkStyle =
+    "text-sm font-normal leading-6 text-foreground transition-colors duration-300 ease-in-out hover:text-primary";
+
+  return (
+    <ul ref={ref} className="ml-4 hidden items-center gap-4 lg:flex xl:gap-6">
+      {items.map((item) => {
+        if (!item.groups) {
+          return (
+            <li key={item.name}>
+              <NavItemLink to={item.to} className={linkStyle}>
+                {item.name}
+              </NavItemLink>
+            </li>
+          );
+        }
+        const isOpen = open === item.name;
+        const panelId = `nav-panel-${item.name.replace(/\s+/g, "-").toLowerCase()}`;
+        return (
+          <li
+            key={item.name}
+            className={cn(!item.mega && "relative")}
+            onMouseEnter={() => setOpen(item.name)}
+            onMouseLeave={() => setOpen((cur) => (cur === item.name ? null : cur))}
+          >
+            <button
+              type="button"
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+              onClick={() => setOpen(isOpen ? null : item.name)}
+              className={cn(linkStyle, "inline-flex items-center gap-1", isOpen && "text-primary")}
+            >
+              {item.name}
+              <ChevronDown
+                size={14}
+                className={cn("transition-transform duration-200", isOpen && "rotate-180")}
+                aria-hidden="true"
+              />
+            </button>
+            <div
+              id={panelId}
+              hidden={!isOpen}
+              className={cn(
+                "absolute top-full z-50 pt-3",
+                item.mega ? "left-1/2 w-[min(60rem,calc(100vw-2rem))] -translate-x-1/2" : "-left-4 w-72",
+              )}
+            >
+              <div className="border-border bg-background text-foreground rounded-2xl border p-5 shadow-xl">
+                <div className={cn("grid gap-6", item.mega && "grid-cols-4")}>
+                  {item.groups.map((g, gi) => (
+                    <div key={g.heading ?? gi}>
+                      {g.heading && <p className="text-muted-foreground mb-2 px-2 text-xs font-semibold">{g.heading}</p>}
+                      <ul className="space-y-0.5">
+                        {g.links.map((l) => (
+                          <li key={l.name + l.to}>
+                            <NavItemLink
+                              to={l.to}
+                              onClick={() => setOpen(null)}
+                              className="hover:bg-accent hover:text-accent-foreground flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors"
+                            >
+                              {l.avatar === "ai-workshops" ? (
+                                <span className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full bg-[#1f35e8] text-white">
+                                  <GraduationCap size={16} aria-hidden="true" />
+                                </span>
+                              ) : (
+                                l.avatar && <AgentAvatar slug={l.avatar} size={30} decorative badge={false} />
+                              )}
+                              <span className="min-w-0">
+                                <span className="block font-medium leading-snug">{l.name}</span>
+                                {l.description && (
+                                  <span className="text-muted-foreground block text-xs leading-snug">{l.description}</span>
+                                )}
+                              </span>
+                            </NavItemLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                {item.footer && (
+                  <div className="border-border mt-4 border-t pt-3">
+                    <NavItemLink
+                      to={item.footer.to}
+                      onClick={() => setOpen(null)}
+                      className="text-primary px-2 text-sm font-semibold hover:underline"
+                    >
+                      {item.footer.name}
+                    </NavItemLink>
+                  </div>
+                )}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
 function NavLogo({ isScrolled }: { isScrolled: boolean }) {

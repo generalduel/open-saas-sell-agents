@@ -48,6 +48,7 @@ services:
         REACT_APP_GOOGLE_ANALYTICS_ID: ${REACT_APP_GOOGLE_ANALYTICS_ID:-}
     restart: unless-stopped
     environment:
+      ROOT_DOMAIN: ${ROOT_DOMAIN}
       APP_DOMAIN: ${APP_DOMAIN}
       API_DOMAIN: ${API_DOMAIN}
       ACME_EMAIL: ${ACME_EMAIL}

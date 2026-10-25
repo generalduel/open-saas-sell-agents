@@ -11,6 +11,11 @@
 	file_server
 }
 
+# Root domain + www -> the app
+{$ROOT_DOMAIN}, www.{$ROOT_DOMAIN} {
+	redir https://{$APP_DOMAIN}{uri} permanent
+}
+
 # Backend API, auth, webhooks, PgBoss-driven server
 {$API_DOMAIN} {
 	encode zstd gzip

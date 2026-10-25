@@ -58,7 +58,7 @@ export function SiteFooter() {
             {featuredAgents.map((a) => (
               <li key={a.slug}>
                 <Link to={agentHref(a.slug)} className={linkClass}>
-                  {a.name}
+                  {a.name.replace(/ Agent$/, "")}
                 </Link>
               </li>
             ))}

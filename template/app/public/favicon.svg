@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>AI Workforce</title>
+  <rect width="64" height="64" rx="14" fill="#1f35e8"/>
+  <rect x="16" y="11" width="32" height="42" rx="7" fill="#ffffff"/>
+  <rect x="25.5" y="15.5" width="13" height="4" rx="2" fill="#1f35e8"/>
+  <circle cx="32" cy="31" r="6.5" fill="#ffd23f"/>
+  <path d="M21 48c1.6-6.6 5.8-10 11-10s9.4 3.4 11 10z" fill="#1f35e8"/>
+</svg>

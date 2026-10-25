@@ -1,34 +1,45 @@
-// JSON-LD structured data for SEO. Helps search engines and LLMs understand
-// your app so it can appear in rich results and AI answers. Customize the
-// placeholders below to match your product. See https://schema.org for types.
+// JSON-LD structured data for search engines and AI answers. See https://schema.org.
+// Only facts that are true today: no prices, ratings or reviews.
+const SITE = "https://www.my2ndworkforce.com";
+
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "SoftwareApplication",
-      "@id": "https://your-saas-app.com/#software",
-      name: "Your Open SaaS App",
-      description: "Your apps main description and features.",
-      url: "https://your-saas-app.com",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Cross-platform",
-      image: "https://your-saas-app.com/public-banner.webp",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-      },
+      "@type": "Organization",
+      "@id": `${SITE}/#organization`,
+      name: "AI Workforce",
+      url: `${SITE}/`,
+      logo: `${SITE}/apple-touch-icon.png`,
+      email: "support@my2ndworkforce.com",
+      founder: { "@type": "Person", name: "Wesley Swann" },
     },
     {
       "@type": "WebSite",
-      "@id": "https://your-saas-app.com/#website",
-      url: "https://your-saas-app.com",
-      name: "Your Open SaaS App",
-      description: "Your apps main description and features.",
+      "@id": `${SITE}/#website`,
+      url: `${SITE}/`,
+      name: "AI Workforce",
+      publisher: { "@id": `${SITE}/#organization` },
+    },
+    {
+      "@type": "Service",
+      "@id": `${SITE}/#service`,
+      name: "Managed AI agents",
+      serviceType: "Managed AI agent setup, hosting and monitoring",
+      provider: { "@id": `${SITE}/#organization` },
+      description:
+        "AI agents that answer leads, sort inboxes, book meetings, keep CRM records clean and support hiring, with human approval on every outbound action.",
+      image: `${SITE}/og-image.png`,
     },
   ],
 };
 
 export function SchemaMarkup() {
-  return <script type="application/ld+json">{JSON.stringify(schema)}</script>;
+  return (
+    <script
+      type="application/ld+json"
+      // JSON.stringify output is safe here: the schema contains only static strings.
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
 }

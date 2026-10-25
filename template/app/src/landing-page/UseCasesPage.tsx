@@ -2,8 +2,10 @@ import { AgentAvatar, personas } from "./agentPeople";
 import { PrimaryCta, UseCaseCard } from "./funnelUi";
 import { useCaseCategories, useCases } from "./useCases";
 import "./landing.css";
+import { usePageTitle } from "../client/hooks/usePageTitle";
 
 export function UseCasesPage() {
+  usePageTitle("AI agent use cases");
   return (
     <div className="wf">
       <main>

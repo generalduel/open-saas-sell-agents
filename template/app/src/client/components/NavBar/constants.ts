@@ -5,7 +5,8 @@ import { BOOKING_URL, jobGroups } from "../../../landing-page/homeContent";
 import { useCaseCategories, useCaseHref, useCases } from "../../../landing-page/useCases";
 import type { NavigationItem } from "./NavBar";
 
-const agentName = (slug: string) => agents.find((a) => a.slug === slug)?.name ?? slug;
+const agentName = (slug: string) =>
+  (agents.find((a) => a.slug === slug)?.name ?? slug).replace(/ Agent$/, "");
 
 export const marketingNavigationItems: NavigationItem[] = [
   {

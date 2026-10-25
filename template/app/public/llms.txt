@@ -1,22 +1,20 @@
-# Your Open SaaS App
+# AI Workforce (my2ndworkforce.com)
 
-> One-line description of what your SaaS does and who it's for.
+> Managed AI agents for small and mid-size businesses. Agents answer leads, sort inboxes, book meetings, keep CRM records clean and support hiring, and the business owner approves anything that leaves the business.
 
-A longer paragraph giving context: the problem your app solves, the kind of
-user it serves, and the key value it delivers. LLMs use this to summarize and
-recommend your app, so make it specific and concrete.
+AI Workforce sets up, hosts and monitors AI agents for a business. Agents run on the customer's own AI provider account (for example OpenAI or Anthropic) and the customer's knowledge files and website. Every outbound action, such as an email, message, calendar invite or public reply, waits for human approval by default. Setup is three steps done with the founder: manage your agents, connect your website, add your knowledge files. The service is built and run by Wesley Swann, founder of Cloud2Networks, with 20 years in Microsoft 365, endpoint management and security.
 
 ## Core pages
 
-- [Home](https://your-saas-app.com): Landing page with features, pricing, and FAQ
-- [Pricing](https://your-saas-app.com/pricing): Subscription plans and pricing
-- [Sign up](https://your-saas-app.com/signup): Create a new account
+- [Home](https://www.my2ndworkforce.com/): What AI Workforce is, the agent roster, how setup works and the founding package
+- [Use cases](https://www.my2ndworkforce.com/use-cases): 18 jobs AI agents can take on, grouped by revenue, customers, operations and industry
+- [Lead generation](https://www.my2ndworkforce.com/use-cases/ai-agents-for-lead-generation): Example use-case page
+- [Inbox Manager agent](https://www.my2ndworkforce.com/agents/inbox-manager): Example agent page
+- [Client portal](https://www.my2ndworkforce.com/portal): Sign-in area for customers
 
-## Documentation
+## Agents
 
-- [Docs](https://docs.your-saas-app.com): Product documentation and guides
-
-## Optional
-
-- [Blog](https://your-saas-app.com/blog): Updates, tutorials, and announcements
-- [GitHub](https://github.com/your-org/your-repo): Open source code
+- AI Lead Generation, Sales Automation, Full Sales Teams, CRM Manager
+- Inbox Manager, Calendar Manager, HR Services
+- AI Recruitment Ecosystem, AI Resume Screening
+- Reputation Management and Threat Intelligence, Custom AI Agents, AI Workshops (live service)

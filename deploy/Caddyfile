@@ -11,8 +11,8 @@
 	file_server
 }
 
-# Root domain + www -> the app
-{$ROOT_DOMAIN}, www.{$ROOT_DOMAIN} {
+# Other hostnames (e.g. bare domain, old app.* name) -> the canonical site
+{$REDIRECT_DOMAINS} {
 	redir https://{$APP_DOMAIN}{uri} permanent
 }
 

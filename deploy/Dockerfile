@@ -32,8 +32,11 @@ FROM node:${NODE_VERSION}-bookworm-slim AS server
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
-COPY --from=wasp /src/.wasp/out /app
-WORKDIR /app/server
+# Keep the project layout so workspace links in node_modules (e.g. `wasp` -> .wasp/out/sdk/wasp) resolve.
+COPY --from=wasp /src/package.json /app/package.json
+COPY --from=wasp /src/node_modules /app/node_modules
+COPY --from=wasp /src/.wasp/out /app/.wasp/out
+WORKDIR /app/.wasp/out/server
 EXPOSE 3001
 # start-production = prisma migrate deploy, then node bundle/server.js
 CMD ["npm", "run", "start-production"]

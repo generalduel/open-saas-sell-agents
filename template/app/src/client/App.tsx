@@ -9,6 +9,7 @@ import {
   marketingNavigationItems,
 } from "./components/NavBar/constants";
 import { CookieConsentBanner } from "./components/cookie-consent/Banner";
+import { SiteFooter } from "./components/SiteFooter";
 
 /**
  * use this component to wrap all child components
@@ -19,7 +20,9 @@ export function App() {
   const isMarketingPage = useMemo(() => {
     return (
       location.pathname === routes.LandingPageRoute.to ||
-      location.pathname === routes.PricingPageRoute.to
+      location.pathname === routes.PricingPageRoute.to ||
+      location.pathname.startsWith("/use-cases") ||
+      location.pathname.startsWith("/agents")
     );
   }, [location]);
 
@@ -61,6 +64,7 @@ export function App() {
             <div className="max-w-(--breakpoint-2xl) mx-auto">
               <Outlet />
             </div>
+            <SiteFooter />
           </>
         )}
       </div>

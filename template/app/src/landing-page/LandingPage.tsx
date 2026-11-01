@@ -80,11 +80,11 @@ function Hero() {
       <div className="mx-auto grid max-w-7xl gap-14 px-4 pb-20 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_.85fr] lg:items-center lg:gap-12 lg:pb-28">
         <div>
           <h1 className="wf-display text-[clamp(2.9rem,6.4vw,5.6rem)]">
-            Your second workforce starts Monday.
+            Build your AI workforce around your business.
           </h1>
           <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-white/85 md:text-xl">
-            A team of AI agents that works like staff, managed for you. They do
-            the work. You approve anything that leaves the building.
+            Explore AI agents for inbox management, scheduling, sales and operations.
+            Choose the work to automate and define the approval rules before activation.
           </p>
           <ul className="mt-7 max-w-[34rem] space-y-3">
             {capabilities.map((c) => (
@@ -122,7 +122,7 @@ function ShiftBoard() {
     <div className="rounded-[28px] bg-[var(--wf-ink)] p-5 shadow-[0_30px_80px_-30px_rgba(5,8,40,.8)] sm:p-7">
       <div className="flex items-baseline justify-between gap-4 border-b border-white/15 pb-4">
         <h2 className="wf-wide text-lg">Today's shift</h2>
-        <span className="text-xs text-white/55">Sample activity, try the buttons</span>
+        <span className="text-xs text-white/55">Illustrative demo — no live actions</span>
       </div>
       <ul className="mt-2">
         {shift.map((row, i) => (
@@ -176,7 +176,7 @@ function ShiftBoard() {
                 onClick={() => setDecision("approved")}
                 className="wf-wide rounded-full bg-[var(--wf-cobalt)] px-5 py-2.5 text-sm text-white hover:bg-[var(--wf-ink)]"
               >
-                Approve and send
+                Preview approval
               </button>
               <button
                 type="button"
@@ -191,11 +191,11 @@ function ShiftBoard() {
               <p className="flex items-center gap-2 text-sm font-semibold">
                 {decision === "approved" ? (
                   <>
-                    <CircleCheck size={18} className="text-[var(--wf-done)]" aria-hidden="true" /> Sent. Logged to your CRM.
+                    <CircleCheck size={18} className="text-[var(--wf-done)]" aria-hidden="true" /> Demo approved. No message was sent.
                   </>
                 ) : (
                   <>
-                    <X size={18} aria-hidden="true" /> Held. Nothing was sent.
+                    <X size={18} aria-hidden="true" /> Demo rejected. No message was sent.
                   </>
                 )}
               </p>
@@ -258,8 +258,8 @@ function AgentShowcase() {
         <div className="flex flex-wrap items-end justify-between gap-8">
           <h2 className="wf-display text-[clamp(2.4rem,5.4vw,4.6rem)]">Meet the crew.</h2>
           <p className="max-w-md text-lg leading-relaxed text-[var(--wf-steel)]">
-            Twelve specialists, grouped by the job you need done. Each one does
-            real work and checks with you before it acts outside your business.
+            Twelve specialist offerings, organized by business need. Actual integrations,
+            permissions and available automations are confirmed during onboarding.
           </p>
         </div>
 
@@ -588,10 +588,9 @@ function Stack() {
           <div className="rounded-b-[26px] bg-[var(--wf-yellow)] px-6 py-7 md:px-8">
             <p className="wf-wide text-xl">Why founding spots are limited</p>
             <p className="mt-2 max-w-3xl leading-relaxed">
-              Every founding client is set up personally by Wesley, not handed to
-              a support team. That takes real calendar time, so the founding
-              cohort closes when the calendar is full. Founding pricing is set on
-              your call, based on the agents you start with.
+              Availability and pricing for custom multi-agent implementations are
+              confirmed during onboarding. The $17.99/month managed agent
+              offer is separate from custom setup and third-party usage charges.
             </p>
           </div>
         </div>
@@ -633,11 +632,11 @@ function FinalCta() {
     <section className="bg-[var(--wf-cobalt)] text-white">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
         <h2 className="wf-display max-w-5xl text-[clamp(2.6rem,6.4vw,5.6rem)]">
-          Your second workforce is ready when you are.
+          Build your AI workforce with a clear plan.
         </h2>
         <p className="mt-8 max-w-2xl text-lg leading-relaxed text-white/85 md:text-xl">
-          Book your setup call, pick your first agent, and hand off the work
-          you're tired of doing. You stay in charge of everything it sends.
+          Create an account, explore agent options, and review your setup requirements.
+          We confirm integrations and approval controls before production activation.
         </p>
         <div className="mt-10">
           <PrimaryCta />

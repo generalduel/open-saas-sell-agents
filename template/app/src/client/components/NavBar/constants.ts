@@ -79,7 +79,7 @@ export const marketingNavigationItems: NavigationItem[] = [
       {
         links: [
           { name: "About", to: "/#founder" },
-          { name: "Book a setup call", to: BOOKING_URL },
+          { name: "Create an account", to: BOOKING_URL },
           { name: "Cloud2Networks", to: "https://cloud2networks.com" },
         ],
       },

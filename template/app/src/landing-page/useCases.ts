@@ -1,6 +1,6 @@
-// Use cases. Five are listed (they map to agents we lead with); the rest stay
-// reachable for existing links and search, but are unlisted and noindexed until
-// traffic data says whether to keep them. Healthcare and HR were removed.
+// Use cases. All are listed in menus and search. Set `listed: false` to hide one
+// from menus and noindex it while keeping the URL working. Healthcare and HR
+// were removed (their URLs redirect to /use-cases).
 // Each one maps to agents that exist in agentCatalog.ts. Where the catalog has
 // no dedicated agent, the work is delivered as a Custom AI Agent and the page
 // says so. DRAFT copy for owner approval: no metrics, customers or guarantees.
@@ -80,7 +80,7 @@ export const useCases: UseCase[] = [
       "Remind owners about renewals and follow-ups",
       "Record outcomes so you can see what keeps customers",
     ],
-    listed: false,
+    listed: true,
     agents: ["crm-manager", "sales-automation", "inbox-manager"],
     approve: "Every check-in message and any offer or discount.",
   },
@@ -114,7 +114,7 @@ export const useCases: UseCase[] = [
       "Flag numbers that move outside your normal range",
       "Answer follow-up questions with the source shown",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents", "crm-manager"],
     approve: "Which systems the agent can read. It reports; it does not change your data.",
   },
@@ -131,7 +131,7 @@ export const useCases: UseCase[] = [
       "Prepare a weekly pipeline summary for the owner",
       "Remind reps about the follow-ups that move deals",
     ],
-    listed: false,
+    listed: true,
     agents: ["crm-manager", "full-sales-teams", "custom-ai-agents"],
     approve: "Bulk record changes and any message to a prospect.",
   },
@@ -148,7 +148,7 @@ export const useCases: UseCase[] = [
       "Flag product issues that keep coming up",
       "Route refunds and exceptions to a person",
     ],
-    listed: false,
+    listed: true,
     agents: ["inbox-manager", "review-requests", "custom-ai-agents"],
     approve: "Public review replies, refunds and any exception to your policy.",
   },
@@ -183,7 +183,7 @@ export const useCases: UseCase[] = [
       "Pull the right details from your knowledge files",
       "Track which versions get replies",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents", "crm-manager"],
     approve: "Every message version before it goes out.",
   },
@@ -218,7 +218,7 @@ export const useCases: UseCase[] = [
       "Prepare reorder reminders for review",
       "Schedule supplier calls and follow-ups",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents", "inbox-manager", "calendar-manager"],
     approve: "Every purchase order and supplier commitment.",
   },
@@ -235,7 +235,7 @@ export const useCases: UseCase[] = [
       "Watch comments and mentions for anything urgent",
       "Suggest replies in your voice",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents", "review-requests"],
     approve: "Every post and public reply before it publishes.",
   },
@@ -252,7 +252,7 @@ export const useCases: UseCase[] = [
       "Summarize trends worth acting on",
       "Deliver a short weekly briefing",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents", "ai-lead-generation"],
     approve: "Which sources the agents use. They research and report; they do not contact anyone.",
   },
@@ -269,7 +269,7 @@ export const useCases: UseCase[] = [
       "Draft page updates and answers to common questions",
       "Report changes week over week",
     ],
-    listed: false,
+    listed: true,
     agents: ["custom-ai-agents"],
     approve: "Every content change before it goes live on your site.",
   },
@@ -286,7 +286,7 @@ export const useCases: UseCase[] = [
       "Coordinate showings on your calendar",
       "Follow up after every showing",
     ],
-    listed: false,
+    listed: true,
     agents: ["ai-lead-generation", "calendar-manager", "crm-manager"],
     approve: "Messages to clients and every booking on your calendar.",
   },
@@ -303,7 +303,7 @@ export const useCases: UseCase[] = [
       "Keep groups current as new data arrives",
       "Hand segments to your campaigns and sales follow-ups",
     ],
-    listed: false,
+    listed: true,
     agents: ["crm-manager", "custom-ai-agents"],
     approve: "Bulk record changes before they are applied.",
   },

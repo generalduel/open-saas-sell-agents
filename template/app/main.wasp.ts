@@ -7,6 +7,8 @@ import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" 
 import { AgentDetailPage } from "./src/landing-page/AgentDetailPage" with { type: "ref" };
 import { UseCasesPage } from "./src/landing-page/UseCasesPage" with { type: "ref" };
 import { UseCaseDetailPage } from "./src/landing-page/UseCaseDetailPage" with { type: "ref" };
+import { FrontOfficePage } from "./src/landing-page/FrontOfficePage" with { type: "ref" };
+import { ServicesPage } from "./src/landing-page/ServicesPage" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
 import { adminSpec } from "./src/admin/admin.wasp";
@@ -53,6 +55,8 @@ export default app({
     route("AgentsRoute", "/agents", page(LandingPage)),
     route("UseCasesRoute", "/use-cases", page(UseCasesPage), { prerender: true }),
     route("UseCaseDetailRoute", "/use-cases/:slug", page(UseCaseDetailPage)),
+    route("FrontOfficeRoute", "/front-office", page(FrontOfficePage), { prerender: true }),
+    route("ServicesRoute", "/services", page(ServicesPage), { prerender: true }),
     route("NotFoundRoute", "*", page(NotFoundPage)),
     authSpec,
     userSpec,

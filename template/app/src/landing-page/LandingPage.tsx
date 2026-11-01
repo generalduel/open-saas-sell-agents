@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { agentHref, type Agent } from "./agentCatalog";
-import { AgentAvatar, personas } from "./agentPeople";
+import { AgentAvatar } from "./agentPeople";
 import { PrimaryCta, TeamStack, agentBySlug } from "./funnelUi";
 import {
   approvalLine,
@@ -22,14 +22,16 @@ import {
   connectTargets,
   credentials,
   faqs,
+  featuredSlugs,
   jobGroups,
+  securityStandards,
   serviceSlugs,
   stack,
   steps,
   valueRows,
   type JobGroupId,
 } from "./homeContent";
-import { useCaseCategories, useCaseHref, useCases } from "./useCases";
+import { listedUseCases as useCases, useCaseCategories, useCaseHref } from "./useCases";
 import "./landing.css";
 import { SchemaMarkup } from "./components/SchemaMarkup";
 
@@ -50,6 +52,7 @@ export function LandingPage() {
       <main>
         <Hero />
         <Roster />
+        <StartHere />
         <Story />
         <ManagedTeam />
         <AgentShowcase />
@@ -58,6 +61,7 @@ export function LandingPage() {
         <UseCaseTeaser />
         <ValueMath />
         <Founder />
+        <Security />
         <Stack />
         <Faq />
         <FinalCta />
@@ -69,9 +73,9 @@ export function LandingPage() {
 /* ------------------------------------------------------------------ Hero */
 
 const shift = [
-  { slug: "inbox-manager", task: "Sorted the morning inbox and flagged 3 customer requests", state: "done" },
-  { slug: "calendar-manager", task: "Found two open slots for Thursday's demo", state: "done" },
-  { slug: "ai-lead-generation", task: "Researching prospects that match your criteria", state: "working" },
+  { slug: "inbox-manager", task: "Sorted the morning inbox and drafted replies to 3 customer requests", state: "done" },
+  { slug: "document-intake", task: "Pulled 4 supplier invoices into your accounting queue", state: "done" },
+  { slug: "speed-to-lead", task: "Reading a new website inquiry and checking your price list", state: "working" },
 ] as const;
 
 function Hero() {
@@ -122,7 +126,7 @@ function ShiftBoard() {
     <div className="rounded-[28px] bg-[var(--wf-ink)] p-5 shadow-[0_30px_80px_-30px_rgba(5,8,40,.8)] sm:p-7">
       <div className="flex items-baseline justify-between gap-4 border-b border-white/15 pb-4">
         <h2 className="wf-wide text-lg">Today's shift</h2>
-        <span className="text-xs text-white/55">Sample activity, try the buttons</span>
+        <span className="text-xs text-white/55">Example approval screen (mockup), try the buttons</span>
       </div>
       <ul className="mt-2">
         {shift.map((row, i) => (
@@ -141,10 +145,7 @@ function ShiftBoard() {
               />
             </span>
             <div>
-              <p className="text-sm font-semibold">
-                {personas[row.slug].name}
-                <span className="font-normal text-white/55"> · {bySlug.get(row.slug)?.name}</span>
-              </p>
+              <p className="text-sm font-semibold">{bySlug.get(row.slug)?.name}</p>
               <p className="mt-0.5 text-sm text-white/70">{row.task}</p>
             </div>
             <span className="sr-only">{row.state === "done" ? "Done" : "In progress"}</span>
@@ -157,16 +158,16 @@ function ShiftBoard() {
       >
         <div className="flex items-center justify-between gap-3">
           <p className="flex items-center gap-3 text-sm font-semibold">
-            <AgentAvatar slug="sales-automation" size={36} decorative />
-            Sam from Sales Automation needs your OK
+            <AgentAvatar slug="speed-to-lead" size={36} decorative />
+            Speed-to-Lead Responder needs your OK
           </p>
           {decision === "pending" && (
             <span className="wf-pulse h-2.5 w-2.5 rounded-full bg-[var(--wf-yellow)]" aria-hidden="true" />
           )}
         </div>
         <p className="mt-3 text-[15px] leading-relaxed">
-          Send a follow-up to Dana Reyes at Northwind Supply about Tuesday's
-          quote?
+          Send this reply to a new website inquiry about a quote? The draft
+          uses your price list and offers two times to talk.
         </p>
         <div className="mt-4" aria-live="polite">
           {decision === "pending" ? (
@@ -225,9 +226,9 @@ function Story() {
         </h2>
         <div className="max-w-[36rem] space-y-5 text-lg leading-relaxed text-[var(--wf-steel)]">
           <p>
-            Leads wait hours for a reply. Follow-ups slip. Booking one meeting
-            takes six emails. And every new hire means another round of resumes
-            on your kitchen table.
+            Leads wait hours for a reply. The inbox eats your morning. And
+            somebody still retypes every invoice and form into accounting by
+            hand.
           </p>
           <p>
             Each of those jobs is repetitive, rules-based and eating hours you
@@ -248,7 +249,7 @@ function Story() {
 /* --------------------------------------------------------- Agent showcase */
 
 function AgentShowcase() {
-  const [groupId, setGroupId] = useState<JobGroupId>("customers");
+  const [groupId, setGroupId] = useState<JobGroupId>("start");
   const group = jobGroups.find((g) => g.id === groupId)!;
   const groupAgents = group.slugs.map((s) => bySlug.get(s)).filter(Boolean) as Agent[];
 
@@ -258,8 +259,9 @@ function AgentShowcase() {
         <div className="flex flex-wrap items-end justify-between gap-8">
           <h2 className="wf-display text-[clamp(2.4rem,5.4vw,4.6rem)]">Meet the crew.</h2>
           <p className="max-w-md text-lg leading-relaxed text-[var(--wf-steel)]">
-            Twelve specialists, grouped by the job you need done. Each one does
-            real work and checks with you before it acts outside your business.
+            {jobGroups.reduce((n, g) => n + g.slugs.length, 0)} agents, grouped by
+            the job you need done. Each one does real work and checks with you
+            before it acts outside your business.
           </p>
         </div>
 
@@ -331,13 +333,16 @@ function AgentBadge({ agent }: { agent: Agent }) {
           <AgentAvatar slug={agent.slug} size={72} decorative />
         )}
         <div className="min-w-0 pb-1">
-          <p className="wf-wide text-lg leading-none">{isService ? "Workshops" : personas[agent.slug]?.name}</p>
-          <h3 className="mt-1.5 text-sm leading-snug text-white/80">{agent.name}</h3>
+          <h3 className="wf-wide text-lg leading-tight">{agent.name}</h3>
           <p className="mt-1 text-xs text-white/60">{isService ? "Live service, led by Wesley" : "AI agent"}</p>
         </div>
       </div>
       <div className="flex flex-1 flex-col px-6 py-6">
         <p className="font-semibold leading-snug">{agent.tagline}</p>
+        <p className="mt-3 text-sm text-[var(--wf-steel)]">
+          <span className="font-semibold text-[var(--wf-ink)]">Replaces: </span>
+          {agent.replaces}
+        </p>
         <p className="mt-5 text-sm font-semibold">On the job</p>
         <ul className="mt-2 space-y-1.5 text-sm text-[var(--wf-steel)]">
           {agent.steps.slice(0, 3).map((s) => (
@@ -371,9 +376,9 @@ function StepVisual({ index }: { index: number }) {
     return (
       <ul className="space-y-2">
         {[
-          ["Inbox Manager", true],
-          ["Calendar Manager", true],
-          ["Sales Automation", false],
+          ["Speed-to-Lead Responder", true],
+          ["Inbox Triage", true],
+          ["Document & Invoice Intake", false],
         ].map(([name, on]) => (
           <li key={name as string} className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm">
             <span>{name as string}</span>
@@ -590,8 +595,9 @@ function Stack() {
             <p className="mt-2 max-w-3xl leading-relaxed">
               Every founding client is set up personally by Wesley, not handed to
               a support team. That takes real calendar time, so the founding
-              cohort closes when the calendar is full. Founding pricing is set on
-              your call, based on the agents you start with.
+              cohort closes when the calendar is full. Every agent starts as a
+              fixed-price pilot with a written scope, so you know the price
+              before you commit.
             </p>
           </div>
         </div>
@@ -650,17 +656,15 @@ function FinalCta() {
 /* --------------------------------------------------------------- Roster */
 
 const rosterSlugs = [
+  "speed-to-lead",
   "inbox-manager",
-  "calendar-manager",
+  "document-intake",
   "ai-lead-generation",
   "sales-automation",
-  "crm-manager",
   "full-sales-teams",
-  "hr-services",
-  "ai-recruitment-ecosystem",
-  "ai-resume-screening",
-  "reputation-management-threat-intelligence",
-  "custom-ai-agents",
+  "crm-manager",
+  "calendar-manager",
+  "review-requests",
 ];
 
 function Roster() {
@@ -669,10 +673,10 @@ function Roster() {
       <div className="mx-auto max-w-7xl px-4 pt-14 sm:px-6">
         <div className="flex flex-wrap items-baseline justify-between gap-4">
           <h2 id="roster-heading" className="wf-wide text-2xl">
-            Your new hires, on call
+            Your agents, on call
           </h2>
           <a href="#agents" className="text-sm font-semibold text-[var(--wf-cobalt)] hover:text-[var(--wf-ink)]">
-            Meet the whole crew
+            See every agent
           </a>
         </div>
       </div>
@@ -681,8 +685,7 @@ function Roster() {
           <li key={slug} className="w-[104px] shrink-0 text-center">
             <Link to={agentHref(slug)} className="group block">
               <AgentAvatar slug={slug} size={96} className="mx-auto" decorative />
-              <span className="wf-wide mt-3 block text-base">{personas[slug].name}</span>
-              <span className="block text-xs leading-snug text-[var(--wf-steel)] group-hover:text-[var(--wf-ink)]">
+              <span className="mt-3 block text-sm font-semibold leading-snug group-hover:text-[var(--wf-cobalt)]">
                 {bySlug.get(slug)?.name}
               </span>
             </Link>
@@ -708,7 +711,7 @@ function Roster() {
 /* ---------------------------------------------------------- Managed team */
 
 function ManagedTeam() {
-  const team = ["inbox-manager", "calendar-manager", "sales-automation", "crm-manager"];
+  const team = ["speed-to-lead", "inbox-manager", "document-intake", "crm-manager"];
   return (
     <section id="managed" className="scroll-mt-24 bg-[var(--wf-ink)] text-white">
       <div className="mx-auto grid max-w-7xl gap-14 px-4 py-20 sm:px-6 md:py-28 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-20">
@@ -764,8 +767,7 @@ function ManagedTeam() {
               {team.map((slug) => (
                 <li key={slug} className="text-center">
                   <AgentAvatar slug={slug} size={84} className="mx-auto" decorative />
-                  <p className="wf-wide mt-2">{personas[slug].name}</p>
-                  <p className="text-xs leading-snug text-white/60">{bySlug.get(slug)?.name}</p>
+                  <p className="mt-2 text-sm font-semibold leading-snug">{bySlug.get(slug)?.name}</p>
                 </li>
               ))}
             </ul>
@@ -781,7 +783,7 @@ function ManagedTeam() {
 function WorkflowStrip() {
   const flow = [
     { icon: <Inbox size={22} aria-hidden="true" />, kind: "Trigger", text: "A new inquiry lands from your website" },
-    { icon: <AgentAvatar slug="sales-automation" size={44} decorative />, kind: "Agent", text: "Sam drafts a reply using your price list" },
+    { icon: <AgentAvatar slug="speed-to-lead" size={44} decorative />, kind: "Agent", text: "The Speed-to-Lead Responder drafts a reply using your price list" },
     { icon: <UserRound size={22} aria-hidden="true" />, kind: "You", text: "You tap approve on your phone" },
     { icon: <Send size={22} aria-hidden="true" />, kind: "Done", text: "Reply sent and the lead logged to your CRM" },
   ];
@@ -835,7 +837,9 @@ function UseCaseTeaser() {
           </Link>
         </div>
         <div className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {useCaseCategories.map((c) => (
+          {useCaseCategories
+            .filter((c) => useCases.some((u) => u.category === c.id))
+            .map((c) => (
             <div key={c.id}>
               <h3 className="wf-wide border-b-2 border-[var(--wf-ink)] pb-3 text-lg">{c.label}</h3>
               <ul className="mt-2">
@@ -855,6 +859,104 @@ function UseCaseTeaser() {
               </ul>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------- Start here */
+
+function StartHere() {
+  const featured = featuredSlugs.map((s) => bySlug.get(s)).filter(Boolean) as Agent[];
+  return (
+    <section id="start-here" className="wf-paper-section scroll-mt-24 border-b border-[var(--wf-line)]">
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
+        <div className="flex flex-wrap items-end justify-between gap-8">
+          <h2 className="wf-display max-w-3xl text-[clamp(2.4rem,5.4vw,4.6rem)]">
+            Start with the three jobs owners hand off first.
+          </h2>
+          <p className="max-w-md text-lg leading-relaxed text-[var(--wf-steel)]">
+            New leads, the inbox and the paperwork. Each one starts as a
+            fixed-price pilot with a written scope.
+          </p>
+        </div>
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          {featured.map((a) => (
+            <article key={a.slug} className="flex flex-col rounded-[22px] border border-[var(--wf-line)] bg-white p-6 md:p-8">
+              <AgentAvatar slug={a.slug} size={56} decorative />
+              <h3 className="wf-wide mt-5 text-2xl leading-tight">{a.name}</h3>
+              <p className="mt-2 font-semibold leading-snug">{a.tagline}</p>
+              <dl className="mt-6 space-y-4 text-sm">
+                <div>
+                  <dt className="font-semibold">What it replaces</dt>
+                  <dd className="mt-1 text-[var(--wf-steel)]">{a.replaces}</dd>
+                </div>
+                <div>
+                  <dt className="font-semibold">Checks with you before</dt>
+                  <dd className="mt-1 text-[var(--wf-steel)]">{approvalLine[a.slug]}</dd>
+                </div>
+              </dl>
+              <p className="mt-6 rounded-xl bg-[var(--wf-paper)] px-4 py-3 text-sm font-semibold">{a.flow}</p>
+              <Link
+                to={agentHref(a.slug)}
+                className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-[var(--wf-cobalt)] hover:text-[var(--wf-ink)]"
+              >
+                How it works
+                <ArrowRight size={15} aria-hidden="true" />
+                <span className="sr-only"> for {a.name}</span>
+              </Link>
+            </article>
+          ))}
+        </div>
+        <div className="mt-10 flex flex-col items-start gap-5 rounded-[28px] bg-[var(--wf-ink)] p-8 text-white md:flex-row md:items-center md:justify-between md:p-10">
+          <div>
+            <p className="wf-wide text-2xl">Want all three?</p>
+            <p className="mt-2 max-w-xl text-white/75">
+              The Front Office Bundle runs them together, with lead generation,
+              follow-ups, your CRM and your calendar alongside.
+            </p>
+          </div>
+          <Link
+            to="/front-office"
+            className="wf-wide inline-flex items-center gap-3 rounded-full bg-[var(--wf-yellow)] px-7 py-4 text-base text-[var(--wf-ink)] transition-colors hover:bg-white"
+          >
+            See the Front Office Bundle
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- Security */
+
+function Security() {
+  return (
+    <section id="security" className="wf-paper-section scroll-mt-24 border-b border-[var(--wf-line)] bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
+        <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-20">
+          <div>
+            <ShieldCheck size={40} className="text-[var(--wf-cobalt)]" aria-hidden="true" />
+            <h2 className="wf-display mt-6 text-[clamp(2.2rem,4.6vw,4rem)]">Built on Microsoft 365 security.</h2>
+            <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-[var(--wf-steel)]">
+              Your agents are set up the way a Microsoft security architect sets
+              up anything that touches business systems. These are the
+              standards behind every setup.
+            </p>
+          </div>
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {securityStandards.map((item) => (
+              <li key={item.title} className="rounded-2xl bg-[var(--wf-paper)] p-6">
+                <p className="flex items-start gap-3 font-semibold">
+                  <Check size={20} className="mt-0.5 shrink-0 text-[var(--wf-cobalt)]" aria-hidden="true" />
+                  {item.title}
+                </p>
+                <p className="mt-2 pl-8 leading-relaxed text-[var(--wf-steel)]">{item.body}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

@@ -2,20 +2,19 @@ import "../../landing-page/landing.css";
 import { Link } from "react-router";
 import { agents, agentHref } from "../../landing-page/agentCatalog";
 import { BOOKING_URL } from "../../landing-page/homeContent";
-import { useCaseHref, useCases } from "../../landing-page/useCases";
-import { photoCredits } from "../../landing-page/agentPeople";
+import { listedUseCases as useCases, useCaseHref } from "../../landing-page/useCases";
 
 // Site-wide footer, rendered by App.tsx on every non-admin page.
 // Self-contained colors so it reads the same in light and dark mode.
 // TODO(owner): add Privacy and Terms links once those pages exist.
 
 const featured = [
+  "speed-to-lead",
   "inbox-manager",
-  "calendar-manager",
+  "document-intake",
   "ai-lead-generation",
   "sales-automation",
   "crm-manager",
-  "custom-ai-agents",
 ];
 
 const linkClass =
@@ -64,7 +63,7 @@ export function SiteFooter() {
             ))}
             <li>
               <Link to="/agents" className={`${linkClass} font-semibold text-white`}>
-                All 12 agents
+                All agents
               </Link>
             </li>
           </ul>
@@ -118,8 +117,18 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link to="/#founding" className={linkClass}>
-                Founding package
+              <Link to="/front-office" className={linkClass}>
+                Front Office Bundle
+              </Link>
+            </li>
+            <li>
+              <Link to="/services" className={linkClass}>
+                Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/#security" className={linkClass}>
+                Security
               </Link>
             </li>
             <li>
@@ -140,21 +149,6 @@ export function SiteFooter() {
           <p>&copy; {new Date().getFullYear()} AI Workforce, my2ndworkforce.com</p>
           <p>Every outbound agent action waits for your approval by default.</p>
         </div>
-        <p className="mx-auto max-w-7xl px-4 pb-6 text-xs leading-relaxed text-white/45 sm:px-6">
-          Agent portraits are stock photos of models from{" "}
-          <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
-            Unsplash
-          </a>{" "}
-          that represent AI agents. They are not employees or customers. Photos by{" "}
-          {photoCredits.map((c, i) => (
-            <span key={c.name}>
-              <a href={c.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
-                {c.name}
-              </a>
-              {i < photoCredits.length - 1 ? ", " : "."}
-            </span>
-          ))}
-        </p>
       </div>
     </footer>
   );

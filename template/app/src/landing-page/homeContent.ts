@@ -11,7 +11,22 @@
 export const BOOKING_URL = "/signup";
 export const PRIMARY_CTA_LABEL = "Book my setup call";
 
-export type JobGroupId = "customers" | "office" | "hiring" | "protect";
+export type JobGroupId = "start" | "customers" | "office";
+
+/** The three lead products. Shown first everywhere. */
+export const featuredSlugs = ["speed-to-lead", "inbox-manager", "document-intake"];
+
+/** The Front Office Bundle: the three lead products plus the supporting agents. */
+export const frontOfficeSlugs = [
+  ...featuredSlugs,
+  "ai-lead-generation",
+  "sales-automation",
+  "crm-manager",
+  "calendar-manager",
+];
+
+/** Services (people-led work) live on /services, not in the agent grid. */
+export const servicePageSlugs = ["custom-ai-agents", "ai-workshops"];
 
 export const jobGroups: {
   id: JobGroupId;
@@ -20,52 +35,36 @@ export const jobGroups: {
   slugs: string[];
 }[] = [
   {
+    id: "start",
+    label: "Start here",
+    promise: "The three jobs most owners hand off first: new leads, the inbox and the paperwork.",
+    slugs: featuredSlugs,
+  },
+  {
     id: "customers",
     label: "Win customers",
     promise: "Find leads, follow up fast and keep your pipeline moving.",
-    slugs: [
-      "ai-lead-generation",
-      "sales-automation",
-      "full-sales-teams",
-      "crm-manager",
-    ],
+    slugs: ["ai-lead-generation", "sales-automation", "full-sales-teams", "crm-manager"],
   },
   {
     id: "office",
     label: "Run the office",
-    promise: "Take the inbox, the calendar and the HR admin off your plate.",
-    slugs: ["inbox-manager", "calendar-manager", "hr-services"],
-  },
-  {
-    id: "hiring",
-    label: "Hire people",
-    promise: "Run a cleaner hiring process without losing the human call.",
-    slugs: ["ai-recruitment-ecosystem", "ai-resume-screening"],
-  },
-  {
-    id: "protect",
-    label: "Protect and build",
-    promise: "Watch your reputation, build custom agents and train your team.",
-    slugs: [
-      "reputation-management-threat-intelligence",
-      "custom-ai-agents",
-      "ai-workshops",
-    ],
+    promise: "Keep the calendar and your reviews under control.",
+    slugs: ["calendar-manager", "review-requests"],
   },
 ];
 
 /** Short "what still needs your OK" line per catalog item, derived from each agent's approval policy. */
 export const approvalLine: Record<string, string> = {
+  "speed-to-lead": "any reply goes out to a lead",
+  "inbox-manager": "anything is sent, deleted, archived or forwarded",
+  "document-intake": "anything is written to accounting or filed",
   "ai-lead-generation": "any outreach is sent",
   "sales-automation": "outbound messages, pricing or bulk record changes",
   "full-sales-teams": "pricing, proposals or messages go out",
   "crm-manager": "bulk edits and outbound actions",
-  "inbox-manager": "anything is sent, deleted, archived or forwarded",
   "calendar-manager": "events are created, moved or cancelled",
-  "hr-services": "anything that touches an employee-sensitive decision",
-  "ai-recruitment-ecosystem": "candidate selections and candidate-facing decisions",
-  "ai-resume-screening": "every outcome. It never rejects a candidate on its own",
-  "reputation-management-threat-intelligence": "public replies and remediation",
+  "review-requests": "any review request or public reply is sent",
   "custom-ai-agents": "tool permissions, data access and production actions",
   "ai-workshops": "pilot scope, signed off by your leadership",
 };
@@ -75,9 +74,9 @@ export const serviceSlugs = new Set(["ai-workshops"]);
 
 /** Hero checklist (capability bullets). */
 export const capabilities = [
-  "Build a team of AI agents for the jobs you never get to",
-  "Hand off follow-ups, scheduling, sorting and admin",
-  "Connect your website, inbox, calendar and CRM",
+  "Answer every new lead in minutes, with a reply you approve",
+  "Sort the inbox and get replies drafted for you",
+  "Pull invoices and forms into your systems without retyping",
   "Train every agent on your own files: price lists, FAQs, policies",
 ];
 
@@ -162,6 +161,34 @@ export const stack = [
   },
 ];
 
+/** "Built on Microsoft 365 security" section. These are setup standards every client gets. */
+export const securityStandards = [
+  {
+    title: "Works inside the tools you already use",
+    body: "Outlook, SharePoint, Teams, Gmail and Google Drive. Your agents work where your team already works, with no new inbox to check.",
+  },
+  {
+    title: "Least access, scoped per agent",
+    body: "Each agent gets only the permissions its job needs, through its own connection, never your personal password.",
+  },
+  {
+    title: "Your business kept separate",
+    body: "Each client's agents, connections and files run separately from every other client's.",
+  },
+  {
+    title: "A human approves what leaves",
+    body: "Emails, replies, records and filings wait for your approval until you decide to relax a rule.",
+  },
+  {
+    title: "Every action logged",
+    body: "You can see what each agent did, when, and who approved it.",
+  },
+  {
+    title: "Your AI account, your keys",
+    body: "Agents run on your own AI provider account, so usage is billed to you and stays under your control.",
+  },
+];
+
 export const credentials = [
   "3x Microsoft Cloud Architect",
   "Cybersecurity Architect",
@@ -192,6 +219,6 @@ export const faqs = [
   },
   {
     q: "What does it cost?",
-    a: "Founding pricing depends on which agents you start with, and we set it on your setup call. Your AI provider bills you directly for usage.",
+    a: "Every agent starts as a fixed-price pilot with a written scope, so you know the price before you commit. The price is confirmed on your setup call. Your AI provider bills you directly for usage.",
   },
 ];

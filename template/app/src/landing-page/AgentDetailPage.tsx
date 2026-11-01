@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, Check, GraduationCap, Plus, ShieldCheck } from "lucide-react";
-import { agents, type Agent } from "./agentCatalog";
-import { AgentAvatar, personas } from "./agentPeople";
+import { agentRedirects, agents, type Agent } from "./agentCatalog";
+import { AgentAvatar } from "./agentPeople";
 import { PrimaryCta, StaffCard, UseCaseCard } from "./funnelUi";
 import { approvalLine, serviceSlugs } from "./homeContent";
 import { crmApi, crmListed, specialties, type Specialty } from "./agentSpecialties";
@@ -9,19 +9,22 @@ import { useCases } from "./useCases";
 import { usePageTitle } from "../client/hooks/usePageTitle";
 import "./landing.css";
 
+/** Agents sold as a paid pilot first while extraction accuracy is proven. */
+const pilotSlugs = new Set(["document-intake"]);
+
 export function AgentDetailPage() {
   const { slug } = useParams();
   const agent = agents.find((a) => a.slug === slug);
   usePageTitle(agent ? agent.name : "Agent not found");
 
-  if (slug === "crm-sales-automation") return <Navigate to="/agents/crm-manager" replace />;
+  if (slug && agentRedirects[slug]) return <Navigate to={agentRedirects[slug]} replace />;
   if (!agent) {
     return (
       <div className="wf">
         <main className="mx-auto max-w-3xl px-4 py-24 sm:px-6">
           <h1 className="wf-display text-5xl">Agent not found</h1>
           <Link to="/#agents" className="mt-6 inline-block font-semibold text-[var(--wf-cobalt)] underline">
-            Meet all 12 agents
+            See all agents
           </Link>
         </main>
       </div>
@@ -33,9 +36,8 @@ export function AgentDetailPage() {
 function AgentPage({ agent }: { agent: Agent }) {
   const spec = specialties[agent.slug as Specialty] as (typeof specialties)[Specialty] | undefined;
   const isService = serviceSlugs.has(agent.slug);
-  const persona = personas[agent.slug];
   const related = agents.filter((a) => a.slug !== agent.slug && a.category === agent.category).slice(0, 3);
-  const relatedUseCases = useCases.filter((u) => u.agents.includes(agent.slug)).slice(0, 3);
+  const relatedUseCases = useCases.filter((u) => u.listed && u.agents.includes(agent.slug)).slice(0, 3);
   const approvalStep = agent.steps.findIndex((s) => /\b(approval|approve|review|validate)\b/i.test(s));
 
   return (
@@ -57,12 +59,18 @@ function AgentPage({ agent }: { agent: Agent }) {
                   <AgentAvatar slug={agent.slug} size={64} decorative />
                 )}
                 <p className="leading-tight">
-                  <span className="wf-wide block text-lg">{isService ? "Live workshop" : persona?.name}</span>
-                  <span className="text-sm text-white/75">{agent.name}</span>
+                  <span className="wf-wide block text-lg">{agent.name}</span>
+                  <span className="text-sm text-white/75">
+                    {isService ? "Live workshop, led by Wesley" : pilotSlugs.has(agent.slug) ? "AI agent · offered as a pilot" : "AI agent"}
+                  </span>
                 </p>
               </div>
               <h1 className="wf-display mt-8 text-[clamp(2.4rem,5.4vw,4.6rem)]">{spec?.headline ?? agent.tagline}</h1>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 md:text-xl">{spec?.lead ?? agent.solution}</p>
+              <p className="mt-5 max-w-xl rounded-2xl bg-white/10 px-5 py-3 text-base">
+                <span className="font-semibold">What it replaces: </span>
+                <span className="text-white/85">{agent.replaces}</span>
+              </p>
               <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
                 <PrimaryCta />
                 <a href="#how-it-works" className="wf-wide border-b-2 border-white/60 pb-1 hover:border-[var(--wf-yellow)]">
@@ -119,7 +127,7 @@ function AgentPage({ agent }: { agent: Agent }) {
         {/* How it works */}
         <section id="how-it-works" className="wf-paper-section scroll-mt-24 border-y border-[var(--wf-line)] bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
-            <h2 className="wf-display max-w-3xl text-[clamp(2rem,4.4vw,3.6rem)]">How {isService ? "the workshop" : persona?.name ?? "this agent"} works for you</h2>
+            <h2 className="wf-display max-w-3xl text-[clamp(2rem,4.4vw,3.6rem)]">How {isService ? "the workshop" : "this agent"} works for you</h2>
             <ol className="mt-12 grid gap-6 md:grid-cols-3">
               {[
                 { t: "Connect your tools", c: agent.integrations },
@@ -209,7 +217,7 @@ function AgentPage({ agent }: { agent: Agent }) {
               )}
               {relatedUseCases.length > 0 && (
                 <>
-                  <h2 className="wf-display mt-16 text-[clamp(1.8rem,3.4vw,2.8rem)]">Jobs {persona?.name ?? "this agent"} helps with</h2>
+                  <h2 className="wf-display mt-16 text-[clamp(1.8rem,3.4vw,2.8rem)]">Jobs this agent helps with</h2>
                   <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {relatedUseCases.map((u) => (
                       <UseCaseCard key={u.slug} useCase={u} />
@@ -224,7 +232,7 @@ function AgentPage({ agent }: { agent: Agent }) {
         <section className="bg-[var(--wf-cobalt)] text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-8 px-4 py-16 sm:px-6 md:flex-row md:items-center md:justify-between md:py-20">
             <h2 className="wf-display max-w-3xl text-[clamp(2rem,4.4vw,3.6rem)]">
-              {spec?.outcome ?? `Put ${isService ? "the workshop" : persona?.name ?? "this agent"} to work.`}
+              {spec?.outcome ?? `Put ${isService ? "the workshop" : "this agent"} to work.`}
             </h2>
             <PrimaryCta />
           </div>

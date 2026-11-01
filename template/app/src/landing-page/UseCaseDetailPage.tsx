@@ -1,11 +1,12 @@
-import { Link, useParams } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, Check, ShieldCheck } from "lucide-react";
-import { AgentAvatar, personas } from "./agentPeople";
+import { AgentAvatar } from "./agentPeople";
 import { PrimaryCta, StaffCard, UseCaseCard, agentBySlug } from "./funnelUi";
 import { steps } from "./homeContent";
-import { useCases, useCasesBySlug } from "./useCases";
+import { useCaseRedirects, useCases, useCasesBySlug } from "./useCases";
 import "./landing.css";
 import { usePageTitle } from "../client/hooks/usePageTitle";
+import { useNoIndex } from "../client/hooks/useNoIndex";
 
 const sentenceCase = (s: string) =>
   /^[A-Z]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1);
@@ -14,6 +15,9 @@ export function UseCaseDetailPage() {
   const { slug } = useParams();
   const useCase = slug ? useCasesBySlug.get(slug) : undefined;
   usePageTitle(useCase?.title ?? "Use case not found");
+  useNoIndex(!!useCase && !useCase.listed);
+
+  if (slug && useCaseRedirects[slug]) return <Navigate to={useCaseRedirects[slug]} replace />;
 
   if (!useCase) {
     return (
@@ -29,10 +33,9 @@ export function UseCaseDetailPage() {
   }
 
   const lead = useCase.agents[0];
-  const leadPersona = personas[lead];
   const leadAgent = agentBySlug.get(lead);
   const related = useCases
-    .filter((u) => u.category === useCase.category && u.slug !== useCase.slug)
+    .filter((u) => u.listed && u.slug !== useCase.slug)
     .slice(0, 3);
 
   return (
@@ -55,18 +58,15 @@ export function UseCaseDetailPage() {
               <div className="mt-6 flex items-center gap-5">
                 <AgentAvatar slug={lead} size={104} decorative />
                 <div>
-                  <p className="wf-wide text-2xl">{leadPersona?.name}</p>
-                  <p className="text-white/70">{leadAgent?.name}, team lead</p>
+                  <p className="wf-wide text-2xl">{leadAgent?.name}</p>
+                  <p className="text-white/70">Lead agent for this job</p>
                 </div>
               </div>
               <ul className="mt-6 flex flex-wrap gap-4 border-t border-white/15 pt-6">
                 {useCase.agents.slice(1).map((s) => (
                   <li key={s} className="flex items-center gap-3">
                     <AgentAvatar slug={s} size={48} decorative />
-                    <span className="text-sm">
-                      <span className="block font-semibold">{personas[s]?.name}</span>
-                      <span className="text-white/60">{agentBySlug.get(s)?.name}</span>
-                    </span>
+                    <span className="text-sm font-semibold">{agentBySlug.get(s)?.name}</span>
                   </li>
                 ))}
               </ul>
@@ -146,7 +146,7 @@ export function UseCaseDetailPage() {
         <section className="bg-[var(--wf-cobalt)] text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-8 px-4 py-16 sm:px-6 md:flex-row md:items-center md:justify-between md:py-20">
             <h2 className="wf-display max-w-3xl text-[clamp(2rem,4.4vw,3.6rem)]">
-              Put {leadPersona?.name ?? "your team"} to work on {sentenceCase(useCase.name)}.
+              Put {leadAgent?.name ?? "your team"} to work on {sentenceCase(useCase.name)}.
             </h2>
             <PrimaryCta />
           </div>

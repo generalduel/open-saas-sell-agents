@@ -28,7 +28,7 @@ const schema = {
       serviceType: "Managed AI agent setup, hosting and monitoring",
       provider: { "@id": `${SITE}/#organization` },
       description:
-        "AI agents that answer leads, sort inboxes, book meetings, keep CRM records clean and support hiring, with human approval on every outbound action.",
+        "AI agents that answer new leads in minutes, triage inboxes, pull invoices and forms into business systems, keep CRM records clean and book meetings, with human approval on every outbound action.",
       image: `${SITE}/og-image.png`,
     },
   ],

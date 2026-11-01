@@ -1,20 +1,22 @@
 # AI Workforce (my2ndworkforce.com)
 
-> Managed AI agents for small and mid-size businesses. Agents answer leads, sort inboxes, book meetings, keep CRM records clean and support hiring, and the business owner approves anything that leaves the business.
+> Managed AI agents for small and mid-size businesses. Agents answer new leads in minutes, triage inboxes, pull invoices and forms into business systems, keep CRM records clean and book meetings, and the business owner approves anything that leaves the business.
 
 AI Workforce sets up, hosts and monitors AI agents for a business. Agents run on the customer's own AI provider account (for example OpenAI or Anthropic) and the customer's knowledge files and website. Every outbound action, such as an email, message, calendar invite or public reply, waits for human approval by default. Setup is three steps done with the founder: manage your agents, connect your website, add your knowledge files. The service is built and run by Wesley Swann, founder of Cloud2Networks, with 20 years in Microsoft 365, endpoint management and security.
 
 ## Core pages
 
-- [Home](https://www.my2ndworkforce.com/): What AI Workforce is, the agent roster, how setup works and the founding package
-- [Use cases](https://www.my2ndworkforce.com/use-cases): 18 jobs AI agents can take on, grouped by revenue, customers, operations and industry
+- [Home](https://www.my2ndworkforce.com/): What AI Workforce is, the three lead agents, how setup works, security standards and the founding package
+- [Front Office Bundle](https://www.my2ndworkforce.com/front-office): Speed-to-Lead, Inbox Triage and Document Intake run together with lead generation, follow-ups, CRM and calendar agents
+- [Services](https://www.my2ndworkforce.com/services): Custom AI agents and team workshops led by the founder
+- [Use cases](https://www.my2ndworkforce.com/use-cases): Jobs AI agents can take on, grouped by revenue, customers, operations and industry
 - [Lead generation](https://www.my2ndworkforce.com/use-cases/ai-agents-for-lead-generation): Example use-case page
-- [Inbox Manager agent](https://www.my2ndworkforce.com/agents/inbox-manager): Example agent page
+- [Speed-to-Lead Responder](https://www.my2ndworkforce.com/agents/speed-to-lead): Example agent page
 - [Client portal](https://www.my2ndworkforce.com/portal): Sign-in area for customers
 
 ## Agents
 
-- AI Lead Generation, Sales Automation, Full Sales Teams, CRM Manager
-- Inbox Manager, Calendar Manager, HR Services
-- AI Recruitment Ecosystem, AI Resume Screening
-- Reputation Management and Threat Intelligence, Custom AI Agents, AI Workshops (live service)
+- Start here: Speed-to-Lead Responder, Inbox Triage, Document & Invoice Intake (pilot)
+- Win customers: AI Lead Generation, Sales Automation, Full Sales Teams, CRM Manager
+- Run the office: Calendar Manager, Review Requests & Reply Drafts
+- Services: Custom AI Agents, AI Workshops (live service)

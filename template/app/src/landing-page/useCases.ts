@@ -1,4 +1,6 @@
-// Use cases, mirroring the 18-topic structure common to AI agent sites.
+// Use cases. Five are listed (they map to agents we lead with); the rest stay
+// reachable for existing links and search, but are unlisted and noindexed until
+// traffic data says whether to keep them. Healthcare and HR were removed.
 // Each one maps to agents that exist in agentCatalog.ts. Where the catalog has
 // no dedicated agent, the work is delivered as a Custom AI Agent and the page
 // says so. DRAFT copy for owner approval: no metrics, customers or guarantees.
@@ -16,6 +18,8 @@ export type UseCase = {
   agents: string[]; // agent catalog slugs, lead agent first
   approve: string;
   note?: string; // extra scoping note, used for regulated industries
+  /** Shown in menus, listings and search. Unlisted pages stay reachable but are noindexed. */
+  listed: boolean;
 };
 
 export const useCaseCategories: { id: UseCaseCategory; label: string }[] = [
@@ -42,7 +46,8 @@ export const useCases: UseCase[] = [
       "Draft a personal first message for every qualified lead",
       "Log every lead and reply to your CRM",
     ],
-    agents: ["ai-lead-generation", "sales-automation", "crm-manager"],
+    listed: true,
+    agents: ["speed-to-lead", "ai-lead-generation", "crm-manager"],
     approve: "Every outreach message before it is sent, with opt-outs honored automatically.",
   },
   {
@@ -58,7 +63,8 @@ export const useCases: UseCase[] = [
       "Escalate unusual or sensitive requests to a person",
       "Track open requests until they are resolved",
     ],
-    agents: ["inbox-manager", "custom-ai-agents", "crm-manager"],
+    listed: true,
+    agents: ["inbox-manager", "speed-to-lead", "review-requests"],
     approve: "Replies to customers until you decide which answer types can go out on their own.",
   },
   {
@@ -74,6 +80,7 @@ export const useCases: UseCase[] = [
       "Remind owners about renewals and follow-ups",
       "Record outcomes so you can see what keeps customers",
     ],
+    listed: false,
     agents: ["crm-manager", "sales-automation", "inbox-manager"],
     approve: "Every check-in message and any offer or discount.",
   },
@@ -90,6 +97,7 @@ export const useCases: UseCase[] = [
       "Follow up with people who engaged",
       "Summarize what each campaign produced",
     ],
+    listed: true,
     agents: ["custom-ai-agents", "crm-manager", "sales-automation"],
     approve: "Every campaign and message before it publishes or sends.",
   },
@@ -106,6 +114,7 @@ export const useCases: UseCase[] = [
       "Flag numbers that move outside your normal range",
       "Answer follow-up questions with the source shown",
     ],
+    listed: false,
     agents: ["custom-ai-agents", "crm-manager"],
     approve: "Which systems the agent can read. It reports; it does not change your data.",
   },
@@ -122,6 +131,7 @@ export const useCases: UseCase[] = [
       "Prepare a weekly pipeline summary for the owner",
       "Remind reps about the follow-ups that move deals",
     ],
+    listed: false,
     agents: ["crm-manager", "full-sales-teams", "custom-ai-agents"],
     approve: "Bulk record changes and any message to a prospect.",
   },
@@ -138,58 +148,27 @@ export const useCases: UseCase[] = [
       "Flag product issues that keep coming up",
       "Route refunds and exceptions to a person",
     ],
-    agents: ["inbox-manager", "reputation-management-threat-intelligence", "custom-ai-agents"],
+    listed: false,
+    agents: ["inbox-manager", "review-requests", "custom-ai-agents"],
     approve: "Public review replies, refunds and any exception to your policy.",
-  },
-  {
-    slug: "ai-agents-for-healthcare",
-    name: "Healthcare",
-    title: "AI agents for healthcare practices",
-    category: "industry",
-    summary: "Cut front-desk admin like scheduling, reminders and intake paperwork.",
-    pain: "Front-desk staff spend their day on phone tag, reminders and forms instead of patients.",
-    tasks: [
-      "Coordinate appointment requests and reminders",
-      "Sort the practice inbox and flag urgent messages",
-      "Prepare intake checklists for staff",
-      "Escalate anything clinical straight to a person",
-    ],
-    agents: ["calendar-manager", "inbox-manager", "custom-ai-agents"],
-    approve: "Anything sent to a patient. Agents never give medical advice.",
-    note: regulated,
   },
   {
     slug: "ai-agents-for-finance",
     name: "Finance",
     title: "AI agents for finance teams",
     category: "industry",
-    summary: "Take document chasing and inbox sorting off your finance team.",
+    summary: "Take invoice entry, document chasing and inbox sorting off your finance team.",
     pain: "Finance teams lose hours chasing documents, sorting requests and preparing routine summaries.",
     tasks: [
       "Sort finance inbox requests by type and deadline",
       "Chase missing documents with polite reminders",
+      "Pull invoices and forms into accounting and folders, with your approval",
       "Prepare routine summaries for review",
-      "Keep client records complete in your CRM",
     ],
-    agents: ["inbox-manager", "custom-ai-agents", "crm-manager"],
+    listed: true,
+    agents: ["document-intake", "inbox-manager", "crm-manager"],
     approve: "Every client-facing message. Agents never move money or approve transactions.",
     note: regulated,
-  },
-  {
-    slug: "ai-agents-for-hr-recruitment",
-    name: "HR and recruitment",
-    title: "AI agents for HR and recruitment",
-    category: "operations",
-    summary: "Run hiring and onboarding admin without losing the human decision.",
-    pain: "Job intake, scheduling interviews, reading resumes and onboarding paperwork swamp small teams.",
-    tasks: [
-      "Organize job intake and candidate status",
-      "Summarize resumes against your published role requirements",
-      "Schedule interviews and collect feedback",
-      "Prepare onboarding checklists for new hires",
-    ],
-    agents: ["ai-recruitment-ecosystem", "ai-resume-screening", "hr-services"],
-    approve: "Every hiring decision. Agents never reject a candidate on their own.",
   },
   {
     slug: "ai-agents-for-content-personalization",
@@ -204,13 +183,14 @@ export const useCases: UseCase[] = [
       "Pull the right details from your knowledge files",
       "Track which versions get replies",
     ],
+    listed: false,
     agents: ["custom-ai-agents", "crm-manager"],
     approve: "Every message version before it goes out.",
   },
   {
     slug: "ai-agents-for-fraud-detection",
     name: "Fraud detection",
-    title: "AI agents for fraud and threat monitoring",
+    title: "AI agents for fraud monitoring",
     category: "operations",
     summary: "Watch for suspicious signals and hand your team a clear triage queue.",
     pain: "Warning signs are spread across alerts, mentions and logs that nobody has time to correlate.",
@@ -220,7 +200,8 @@ export const useCases: UseCase[] = [
       "Write analyst-friendly summaries of what happened",
       "Escalate the items that need action",
     ],
-    agents: ["reputation-management-threat-intelligence", "custom-ai-agents"],
+    listed: true,
+    agents: ["custom-ai-agents", "inbox-manager"],
     approve: "Every finding before anyone acts on it, and all remediation.",
     note: regulated,
   },
@@ -237,6 +218,7 @@ export const useCases: UseCase[] = [
       "Prepare reorder reminders for review",
       "Schedule supplier calls and follow-ups",
     ],
+    listed: false,
     agents: ["custom-ai-agents", "inbox-manager", "calendar-manager"],
     approve: "Every purchase order and supplier commitment.",
   },
@@ -253,7 +235,8 @@ export const useCases: UseCase[] = [
       "Watch comments and mentions for anything urgent",
       "Suggest replies in your voice",
     ],
-    agents: ["custom-ai-agents", "reputation-management-threat-intelligence"],
+    listed: false,
+    agents: ["custom-ai-agents", "review-requests"],
     approve: "Every post and public reply before it publishes.",
   },
   {
@@ -269,7 +252,8 @@ export const useCases: UseCase[] = [
       "Summarize trends worth acting on",
       "Deliver a short weekly briefing",
     ],
-    agents: ["ai-lead-generation", "reputation-management-threat-intelligence", "custom-ai-agents"],
+    listed: false,
+    agents: ["custom-ai-agents", "ai-lead-generation"],
     approve: "Which sources the agents use. They research and report; they do not contact anyone.",
   },
   {
@@ -285,7 +269,8 @@ export const useCases: UseCase[] = [
       "Draft page updates and answers to common questions",
       "Report changes week over week",
     ],
-    agents: ["custom-ai-agents", "reputation-management-threat-intelligence"],
+    listed: false,
+    agents: ["custom-ai-agents"],
     approve: "Every content change before it goes live on your site.",
   },
   {
@@ -301,6 +286,7 @@ export const useCases: UseCase[] = [
       "Coordinate showings on your calendar",
       "Follow up after every showing",
     ],
+    listed: false,
     agents: ["ai-lead-generation", "calendar-manager", "crm-manager"],
     approve: "Messages to clients and every booking on your calendar.",
   },
@@ -317,10 +303,19 @@ export const useCases: UseCase[] = [
       "Keep groups current as new data arrives",
       "Hand segments to your campaigns and sales follow-ups",
     ],
+    listed: false,
     agents: ["crm-manager", "custom-ai-agents"],
     approve: "Bulk record changes before they are applied.",
   },
 ];
+
+export const listedUseCases = useCases.filter((u) => u.listed);
+
+/** Removed use-case URLs and where they now point. */
+export const useCaseRedirects: Record<string, string> = {
+  "ai-agents-for-healthcare": "/use-cases",
+  "ai-agents-for-hr-recruitment": "/use-cases",
+};
 
 export const useCaseHref = (slug: string) => `/use-cases/${slug}`;
 export const useCasesBySlug = new Map(useCases.map((u) => [u.slug, u]));

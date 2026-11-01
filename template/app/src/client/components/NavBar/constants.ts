@@ -2,7 +2,7 @@ import { routes } from "wasp/client/router";
 import { BlogUrl, DocsUrl } from "../../../shared/common";
 import { agentHref, agents } from "../../../landing-page/agentCatalog";
 import { BOOKING_URL, jobGroups } from "../../../landing-page/homeContent";
-import { useCaseCategories, useCaseHref, useCases } from "../../../landing-page/useCases";
+import { listedUseCases as useCases, useCaseCategories, useCaseHref } from "../../../landing-page/useCases";
 import type { NavigationItem } from "./NavBar";
 
 const agentName = (slug: string) =>
@@ -17,18 +17,20 @@ export const marketingNavigationItems: NavigationItem[] = [
       heading: g.label,
       links: g.slugs.map((slug) => ({ name: agentName(slug), to: agentHref(slug), avatar: slug })),
     })),
-    footer: { name: "Meet all 12 agents", to: "/#agents" },
+    footer: { name: "See all agents", to: "/#agents" },
   },
   {
     name: "Use Cases",
     to: "/use-cases",
     mega: true,
-    groups: useCaseCategories.map((c) => ({
-      heading: c.label,
-      links: useCases
-        .filter((u) => u.category === c.id)
-        .map((u) => ({ name: u.name, to: useCaseHref(u.slug) })),
-    })),
+    groups: useCaseCategories
+      .map((c) => ({
+        heading: c.label,
+        links: useCases
+          .filter((u) => u.category === c.id)
+          .map((u) => ({ name: u.name, to: useCaseHref(u.slug) })),
+      }))
+      .filter((g) => g.links.length > 0),
     footer: { name: "View all use cases", to: "/use-cases" },
   },
   {
@@ -51,10 +53,10 @@ export const marketingNavigationItems: NavigationItem[] = [
     groups: [
       {
         links: [
+          { name: "Front Office Bundle", to: "/front-office", description: "Leads, inbox and paperwork, handled together" },
           { name: "Done-for-you setup", to: "/#how-it-works", description: "Three steps, done with you" },
-          { name: "Founding package", to: "/#founding", description: "Everything included" },
-          { name: "Custom AI agents", to: agentHref("custom-ai-agents"), description: "Built around your workflow" },
-          { name: "AI workshops", to: agentHref("ai-workshops"), description: "Train your team" },
+          { name: "Built on Microsoft 365 security", to: "/#security", description: "How every setup is protected" },
+          { name: "Services", to: "/services", description: "Custom agents and team workshops" },
         ],
       },
     ],

@@ -1,6 +1,6 @@
 import { AgentAvatar, personas } from "./agentPeople";
 import { PrimaryCta, UseCaseCard } from "./funnelUi";
-import { useCaseCategories, useCases } from "./useCases";
+import { listedUseCases as useCases, useCaseCategories } from "./useCases";
 import "./landing.css";
 import { usePageTitle } from "../client/hooks/usePageTitle";
 
@@ -34,7 +34,7 @@ export function UseCasesPage() {
             </div>
             <ul aria-hidden="true" className="hidden grid-cols-4 gap-3 lg:grid">
               {Object.keys(personas)
-                .filter((s) => s !== "ai-workshops")
+                .filter((s) => s !== "ai-workshops" && s !== "custom-ai-agents")
                 .map((s, i) => (
                   <li key={s} className={i % 2 ? "translate-y-5" : ""}>
                     <AgentAvatar slug={s} size={92} decorative />
@@ -51,12 +51,13 @@ export function UseCasesPage() {
 
         {useCaseCategories.map((c) => {
           const items = useCases.filter((u) => u.category === c.id);
+          if (items.length === 0) return null;
           return (
             <section key={c.id} id={c.id} className="wf-paper-section scroll-mt-24 border-b border-[var(--wf-line)]">
               <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20">
                 <div className="flex items-baseline justify-between gap-4">
                   <h2 className="wf-display text-[clamp(2rem,4vw,3.2rem)]">{c.label}</h2>
-                  <span className="text-sm text-[var(--wf-steel)]">{items.length} use cases</span>
+                  <span className="text-sm text-[var(--wf-steel)]">{items.length} use {items.length === 1 ? "case" : "cases"}</span>
                 </div>
                 <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((u) => (

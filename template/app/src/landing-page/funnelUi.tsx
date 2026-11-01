@@ -55,11 +55,10 @@ export function TeamStack({
   );
 }
 
-/** Small "staff card" for an agent: portrait, persona name, role, link. */
+/** Small card for an agent: job icon, name, one-line promise, link. */
 export function StaffCard({ slug, dark = false }: { slug: string; dark?: boolean }) {
   const agent = agentBySlug.get(slug);
-  const p = personas[slug];
-  if (!agent || !p) return null;
+  if (!agent || !personas[slug]) return null;
   return (
     <Link
       to={agentHref(slug)}
@@ -71,9 +70,9 @@ export function StaffCard({ slug, dark = false }: { slug: string; dark?: boolean
     >
       <AgentAvatar slug={slug} size={60} decorative />
       <span className="min-w-0">
-        <span className="wf-wide block text-lg leading-tight">{p.name}</span>
+        <span className="wf-wide block text-lg leading-tight">{agent.name}</span>
         <span className={`block text-sm ${dark ? "text-white/70" : "text-[var(--wf-steel)]"}`}>
-          {agent.name}
+          {agent.tagline}
         </span>
       </span>
     </Link>

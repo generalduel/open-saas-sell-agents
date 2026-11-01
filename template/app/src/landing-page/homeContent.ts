@@ -3,13 +3,11 @@
 // that do not exist (see DESIGN.md and the brand guardrails).
 
 /**
- * Primary call to action used everywhere on the home page.
- * TODO(owner): replace BOOKING_URL with the real booking link (Moxie scheduler
- * or similar) before deploy. "/signup" is a temporary stand-in only: after
- * signup the app currently redirects to the template demo app.
+ * Primary call to action: account creation. Do not label this link as a
+ * booking flow until a real scheduler is connected and tested.
  */
 export const BOOKING_URL = "/signup";
-export const PRIMARY_CTA_LABEL = "Book my setup call";
+export const PRIMARY_CTA_LABEL = "Create your account";
 
 export type JobGroupId = "customers" | "office" | "hiring" | "protect";
 
@@ -120,17 +118,17 @@ export const valueRows = [
   {
     factor: "Odds it works",
     diy: "Depends on your prompts and your spare evenings",
-    us: "Set up by a 20-year Microsoft security operator, with approval gates from day one",
+    us: "Security-led setup with approval policies defined during onboarding",
   },
   {
     factor: "Time to results",
     diy: "Weeks of tinkering before anything runs",
-    us: "Three setup steps, done with you on one call",
+    us: "A guided setup plan, scoped to your tools and workflows",
   },
   {
     factor: "Your effort",
     diy: "You build, host, patch and monitor it",
-    us: "You approve the work. We build, host and monitor.",
+    us: "Define the approval rules and support model during onboarding.",
   },
 ];
 
@@ -145,11 +143,11 @@ export const stack = [
     replaces: "Copy-pasting your FAQ into a chatbot",
   },
   {
-    item: "Approval rules on every outbound action",
+    item: "Configurable approval policies for outbound actions",
     replaces: "Hoping the AI gets it right",
   },
   {
-    item: "Hosting, workflows and monitoring run for you",
+    item: "Managed hosting and monitoring options reviewed during setup",
     replaces: "Servers, updates and 2 a.m. failures",
   },
   {
@@ -157,7 +155,7 @@ export const stack = [
     replaces: "Marked-up usage fees",
   },
   {
-    item: "Direct access to Wesley during onboarding",
+    item: "Guided onboarding and an agreed support contact",
     replaces: "A support ticket queue",
   },
 ];
@@ -176,7 +174,7 @@ export const faqs = [
   },
   {
     q: "Will an agent send something without my permission?",
-    a: "Not by default. Anything that leaves your business, like an email, a message or a calendar invite to someone outside, waits for your approval. Agents start by drafting, and you loosen the rules only when you trust the work.",
+    a: "Approval requirements depend on your selected agent and configured workflow. Outbound messages, calendar changes and sensitive actions should remain in review mode until your permissions and policies are tested.",
   },
   {
     q: "Do I need my own AI account?",
@@ -188,10 +186,10 @@ export const faqs = [
   },
   {
     q: "What happens to my files and connections?",
-    a: "They are scoped to your account and used only by your agents. Saved credentials are encrypted and never shown back to you in the browser.",
+    a: "We configure least-privilege access and account-specific connections during onboarding. Do not enter production API secrets until your secure credential vault and connection permissions are confirmed active.",
   },
   {
     q: "What does it cost?",
-    a: "Founding pricing depends on which agents you start with, and we set it on your setup call. Your AI provider bills you directly for usage.",
+    a: "The managed AI agent offer is advertised at $17.99/month on AIWorkerAgency.com. Custom multi-agent deployments and additional services may have separate pricing, confirmed in writing before purchase. Third-party AI usage may be billed separately.",
   },
 ];
